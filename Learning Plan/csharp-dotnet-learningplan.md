@@ -6,14 +6,14 @@
 
 ### Topics to Cover:
 
-- What is C#? [[Day 1 Notes#1. What is C ?]]
-- What is .NET? (Difference between .NET Framework, .NET Core, and .NET 7+) [[Day 1 Notes#2. What is .NET?]]
-- Installing .NET SDK and Visual Studio [[Day 1 Notes#**3. Installing .NET SDK and Visual Studio**]]
-- First C# Program (Hello, World!) [[Day 1 Notes#**4. First C Program (Hello, World!)**]]
-- Understanding C# Data Types, Variables, and Constants [[Day 1 Notes#**5. Understanding C Data Types, Variables, and Constants**]]
-- Operators and Expressions [[Day 1 Notes#**6. Operators and Expressions**]]
-- Control Structures (if-else, switch, loops) [[Day 1 Notes#**7. Control Structures (if-else, switch, loops)**]]
-- Methods and Functions [[Day 1 Notes#**8. Methods and Functions**]]
+- What is C#? [[Day 1 Notes#1. What is C ?|Notes]]
+- What is .NET? (Difference between .NET Framework, .NET Core, and .NET 7+) [[Day 1 Notes#2. What is .NET?|Notes]]
+- Installing .NET SDK and Visual Studio [[Day 1 Notes#**3. Installing .NET SDK and Visual Studio**|Notes]]
+- First C# Program (Hello, World!) [[Day 1 Notes#**4. First C Program (Hello, World!)**|Notes]]
+- Understanding C# Data Types, Variables, and Constants [[Day 1 Notes#**5. Understanding C Data Types, Variables, and Constants**|Notes]]
+- Operators and Expressions [[Day 1 Notes#**6. Operators and Expressions**|Notes]]
+- Control Structures (if-else, switch, loops) [[Day 1 Notes#**7. Control Structures (if-else, switch, loops)**|Notes]]
+- Methods and Functions [[Day 1 Notes#**8. Methods and Functions**||Notes]]
 
 ### Hands-On Exercises:
 
@@ -28,14 +28,14 @@
 
 ### Topics to Cover:
 
-- Classes and Objects
-- Constructors and Destructors
-- Access Modifiers (public, private, protected, internal, \*virtual)
-- Properties and Auto-Properties
-- Methods and Method Overloading
-- Static vs. Instance Members
-- Inheritance, Polymorphism, Abstraction, and Encapsulation
-- Interfaces vs. Abstract Classes
+- Classes and Objects [[Day 2 Notes#1. **Classes and Objects**|Notes]]
+- Constructors and Destructors [[Day 2 Notes#2. **Constructors and Destructors**|Notes]]
+- Access Modifiers (public, private, protected, internal, \*virtual) [[Day 2 Notes#3. **Access Modifiers**|Notes]]
+- Properties and Auto-Properties [[Day 2 Notes#4. **Properties and Auto-Properties**|Notes]]
+- Methods and Method Overloading [[Day 2 Notes#5. **Methods and Method Overloading**|Notes]]
+- Static vs. Instance Members [[Day 2 Notes#6. **Static vs. Instance Members**|Notes]]
+- Inheritance, Polymorphism, Abstraction, and Encapsulation [[Day 2 Notes#7. **Inheritance, Polymorphism, Abstraction, and Encapsulation**|Notes]]
+- Interfaces vs. Abstract Classes [[Day 2 Notes#8. **Interfaces vs. Abstract Classes**|Notes]]
 
 ### Hands-On Exercises:
 
