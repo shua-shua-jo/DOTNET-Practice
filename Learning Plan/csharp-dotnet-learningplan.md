@@ -6,14 +6,14 @@
 
 ### Topics to Cover:
 
-- [[Day 1 Notes#1. What is C ?|What is C#?]]?
-- [[Day 1 Notes#2. What is .NET?|What is .NET? (Difference between .NET Framework, .NET Core, and .NET 7+)]]
-- Installing .NET SDK and Visual Studio
-- First C# Program (Hello, World!)
-- Understanding C# Data Types, Variables, and Constants
-- Operators and Expressions
-- Control Structures (if-else, switch, loops)
-- Methods and Functions
+- What is C#? [[Day 1 Notes#1. What is C ?]]
+- What is .NET? (Difference between .NET Framework, .NET Core, and .NET 7+) [[Day 1 Notes#2. What is .NET?]]
+- Installing .NET SDK and Visual Studio [[Day 1 Notes#**3. Installing .NET SDK and Visual Studio**]]
+- First C# Program (Hello, World!) [[Day 1 Notes#**4. First C Program (Hello, World!)**]]
+- Understanding C# Data Types, Variables, and Constants [[Day 1 Notes#**5. Understanding C Data Types, Variables, and Constants**]]
+- Operators and Expressions [[Day 1 Notes#**6. Operators and Expressions**]]
+- Control Structures (if-else, switch, loops) [[Day 1 Notes#**7. Control Structures (if-else, switch, loops)**]]
+- Methods and Functions [[Day 1 Notes#**8. Methods and Functions**]]
 
 ### Hands-On Exercises:
 
