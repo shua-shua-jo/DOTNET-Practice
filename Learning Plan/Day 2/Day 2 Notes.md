@@ -159,3 +159,62 @@
 	    }
 	}
 ```
+
+### **Summary**
+- **Classes and Objects**:
+    
+    - A class is a blueprint for creating objects.
+        
+    - Objects are instances of a class, containing data and behavior (methods).
+        
+    - Methods inside a class define the actions objects can perform (e.g., starting or driving a car).
+        
+- **Constructors and Destructors**:
+    
+    - Constructors initialize objects when they are created.
+        
+    - Destructors are used to clean up resources when an object is destroyed.
+        
+- **Access Modifiers**:
+    
+    - `public`: Accessible from anywhere.
+        
+    - `private`: Accessible only within the same class.
+        
+    - `protected`: Accessible within the class and its derived classes.
+        
+    - `internal`: Accessible within the same assembly.
+        
+- **Properties**:
+    
+    - Properties allow controlled access to private fields.
+        
+    - Auto-properties provide a shorthand way of defining properties with automatic backing fields.
+        
+- **Method Overloading**:
+    
+    - Multiple methods with the same name can exist, as long as their parameters differ.
+        
+    - Overloading makes methods flexible for different use cases (e.g., driving a car with or without specifying speed).
+        
+- **Static vs. Instance Members**:
+    
+    - Static members belong to the class itself and are shared across all instances.
+        
+    - Instance members belong to individual objects (instances).
+        
+- **Inheritance, Polymorphism, Abstraction, and Encapsulation**:
+    
+    - **Inheritance**: Allows a class to inherit properties and methods from another class.
+        
+    - **Polymorphism**: Allows objects of different types to be treated uniformly (e.g., overriding methods).
+        
+    - **Abstraction**: Hides complex details and shows only the necessary parts of an object.
+        
+    - **Encapsulation**: Bundles data and methods together while restricting direct access to certain parts.
+        
+- **Interfaces vs. Abstract Classes**:
+    
+    - **Interfaces**: Define a contract that classes must implement, without providing implementation.
+        
+    - **Abstract Classes**: Can provide partial implementation and must be inherited by other classes.

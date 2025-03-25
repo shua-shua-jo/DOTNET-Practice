@@ -710,5 +710,3 @@ Both are very powerful tools in C# for simplifying delegate usage and making cod
 ### Summary:
 
 Today, we explored some of the most powerful features in C# like exception handling, working with value types and reference types, generics, and collections. The exercises provided practical examples of how to apply these concepts to real-world scenarios, like reading files, handling events, and using LINQ.
-
-Keep practicing these concepts to strengthen your understanding, and feel free to reach out if you have any questions!
