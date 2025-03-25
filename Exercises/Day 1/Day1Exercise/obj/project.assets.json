@@ -13,11 +13,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\elijah.abello\\Documents\\DOTNET Practice\\Exercises\\ConsoleApp1\\ConsoleApp1.csproj",
-      "projectName": "ConsoleApp1",
-      "projectPath": "C:\\Users\\elijah.abello\\Documents\\DOTNET Practice\\Exercises\\ConsoleApp1\\ConsoleApp1.csproj",
+      "projectUniqueName": "C:\\Users\\elijah.abello\\Documents\\DOTNET-Practice\\Exercises\\Day 1\\Day1Exercise\\Day1Exercise.csproj",
+      "projectName": "Day1Exercise",
+      "projectPath": "C:\\Users\\elijah.abello\\Documents\\DOTNET-Practice\\Exercises\\Day 1\\Day1Exercise\\Day1Exercise.csproj",
       "packagesPath": "C:\\Users\\elijah.abello\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\elijah.abello\\Documents\\DOTNET Practice\\Exercises\\ConsoleApp1\\obj\\",
+      "outputPath": "C:\\Users\\elijah.abello\\Documents\\DOTNET-Practice\\Exercises\\Day 1\\Day1Exercise\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\elijah.abello\\AppData\\Roaming\\NuGet\\NuGet.Config"
