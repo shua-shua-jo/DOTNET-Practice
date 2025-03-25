@@ -61,7 +61,7 @@
 	}
 ```
 
-#### 4. **Properties and Auto-Properties**
+# 4. **Properties and Auto-Properties**
 
 - **Properties**: Provide a way to read, write, or compute values of private fields.
     
@@ -75,7 +75,7 @@
 	}
 ```
 
-#### 5. **Methods and Method Overloading**
+# 5. **Methods and Method Overloading**
 
 - **Method**: A function defined in a class that performs some operation.
     
@@ -89,7 +89,7 @@
 	}
 ```
 
-#### 6. **Static vs. Instance Members**
+# 6. **Static vs. Instance Members**
 
 - **Static**: Belongs to the class itself, not to instances.
     
@@ -103,7 +103,7 @@
 	}
 ```
 
-#### 7. **Inheritance, Polymorphism, Abstraction, and Encapsulation**
+# 7. **Inheritance, Polymorphism, Abstraction, and Encapsulation**
 
 - **Inheritance**: A class can inherit properties and methods from another class.
     
@@ -131,7 +131,7 @@
 	animal.MakeSound();  // Outputs: Bark
 ```
 
-#### 8. **Interfaces vs. Abstract Classes**
+# 8. **Interfaces vs. Abstract Classes**
 
 - **Interface**: Defines a contract that classes must follow (no implementation).
     
