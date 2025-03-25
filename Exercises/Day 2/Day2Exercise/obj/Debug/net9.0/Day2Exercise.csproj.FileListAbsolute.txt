@@ -1,0 +1,15 @@
+C:\Users\elijah.abello\Documents\DOTNET-Practice\Exercises\Day 2\Day2Exercise\bin\Debug\net9.0\Day2Exercise.exe
+C:\Users\elijah.abello\Documents\DOTNET-Practice\Exercises\Day 2\Day2Exercise\bin\Debug\net9.0\Day2Exercise.deps.json
+C:\Users\elijah.abello\Documents\DOTNET-Practice\Exercises\Day 2\Day2Exercise\bin\Debug\net9.0\Day2Exercise.runtimeconfig.json
+C:\Users\elijah.abello\Documents\DOTNET-Practice\Exercises\Day 2\Day2Exercise\bin\Debug\net9.0\Day2Exercise.dll
+C:\Users\elijah.abello\Documents\DOTNET-Practice\Exercises\Day 2\Day2Exercise\bin\Debug\net9.0\Day2Exercise.pdb
+C:\Users\elijah.abello\Documents\DOTNET-Practice\Exercises\Day 2\Day2Exercise\obj\Debug\net9.0\Day2Exercise.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\elijah.abello\Documents\DOTNET-Practice\Exercises\Day 2\Day2Exercise\obj\Debug\net9.0\Day2Exercise.AssemblyInfoInputs.cache
+C:\Users\elijah.abello\Documents\DOTNET-Practice\Exercises\Day 2\Day2Exercise\obj\Debug\net9.0\Day2Exercise.AssemblyInfo.cs
+C:\Users\elijah.abello\Documents\DOTNET-Practice\Exercises\Day 2\Day2Exercise\obj\Debug\net9.0\Day2Exercise.csproj.CoreCompileInputs.cache
+C:\Users\elijah.abello\Documents\DOTNET-Practice\Exercises\Day 2\Day2Exercise\obj\Debug\net9.0\Day2Exercise.sourcelink.json
+C:\Users\elijah.abello\Documents\DOTNET-Practice\Exercises\Day 2\Day2Exercise\obj\Debug\net9.0\Day2Exercise.dll
+C:\Users\elijah.abello\Documents\DOTNET-Practice\Exercises\Day 2\Day2Exercise\obj\Debug\net9.0\refint\Day2Exercise.dll
+C:\Users\elijah.abello\Documents\DOTNET-Practice\Exercises\Day 2\Day2Exercise\obj\Debug\net9.0\Day2Exercise.pdb
+C:\Users\elijah.abello\Documents\DOTNET-Practice\Exercises\Day 2\Day2Exercise\obj\Debug\net9.0\Day2Exercise.genruntimeconfig.cache
+C:\Users\elijah.abello\Documents\DOTNET-Practice\Exercises\Day 2\Day2Exercise\obj\Debug\net9.0\ref\Day2Exercise.dll
