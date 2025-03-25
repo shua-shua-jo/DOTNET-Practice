@@ -358,7 +358,7 @@ obj = "Hello"; // obj can change type at runtime.
  **Difference:**
 
 - `var` requires type inference at compile-time, while `dynamic` defers type checking until runtime.
-# **4. Boxing vs Unboxing**
+# 4. **Boxing vs Unboxing**
 
 This concept is particularly important for **value types** when interacting with **reference types**.
 
@@ -419,7 +419,7 @@ int num = 5;
 Increment(ref num); 
 Console.WriteLine(num); // Output: 6
 ```
-# **6. Generics**
+# 6. **Generics**
 
 Generics allow you to define a class, method, or interface with a placeholder for the data type, which improves type safety and performance.
 
@@ -487,6 +487,7 @@ Dictionary<string, int> dict = new Dictionary<string, int>
 ```c#
 Queue<string> queue = new Queue<string>(); queue.Enqueue("First");
 queue.Enqueue("Second");
+queue.Dequeue(); // Returns "First"
 ```
     
 ### **Stack:** LIFO (Last-In-First-Out) collection.
@@ -496,6 +497,7 @@ queue.Enqueue("Second");
 Stack<string> stack = new Stack<string>();
 stack.Push("First");
 stack.Push("Second");
+stack.Pop(); // Returns "Second"
 ```
     
 ### **IEnumerable interface:** Represents any collection that can be enumerated (iterated).
@@ -520,37 +522,193 @@ foreach (var num in numbers)
 	
 - Example:
 	
-	
+\[1]
 ```c#
 delegate void Greet(string name);
 Greet greetDelegate = name => Console.WriteLine($"Hello, {name}");
 greetDelegate("Alice");
 ```
-        
+\[2]
+```c#
+public delegate void MyDelegate(string message);
+
+public void DisplayMessage(string message) {
+    Console.WriteLine(message);
+}
+
+MyDelegate del = new MyDelegate(DisplayMessage);
+del("Hello from delegate!");
+```
 ### **Events:** Allow for a publisher-subscriber pattern.
     
 - Based on delegates, used to implement event-driven programming.
 	
 - Example of a simple event:
+\[1]
+```c#
+public delegate void EventHandler();
+public event EventHandler OnEventOccurred;
+
+public void TriggerEvent() {
+	OnEventOccurred?.Invoke();
+}
+```
+\[2]
+```c#
+public class Publisher
+{
+    public event MyDelegate Notify;
+
+    public void TriggerEvent()
+    {
+        Notify?.Invoke("Event triggered");
+    }
+}
+```
+
+### **Func<> Delegate**
+
+The `Func<>` delegate is used for methods that **return a value**. It can take up to 16 input parameters (though most commonly used with fewer), and it always has a **return type**.
+
+- **Syntax:** `Func<T1, T2, ..., T16, TResult>`
+    
+    - `T1, T2, ..., T16` are the types of the input parameters.
+        
+    - `TResult` is the type of the return value.
+        
+
+**Key Points:**
+
+- The last type parameter represents the return type.
+    
+- It is often used when you need to pass methods that return a value.
+    
+#### **Examples:**
+
+1. **Basic Example (No parameters, returns a value):**
+    
+    ```c#
+	Func<int> getRandomNumber = () => new Random().Next(1, 100); 
+	Console.WriteLine(getRandomNumber());  // Calls the lambda and returns a random number
+	```
+    
+    In this example, `Func<int>` means the delegate takes no parameters and returns an `int`. The lambda expression `() => new Random().Next(1, 100)` generates a random number.
+    
+2. **With Parameters (Takes two integers, returns their sum):**
 	
-	csharp
+    ```c#
+    Func<int, int, int> addNumbers = (a, b) => a + b; 
+    Console.WriteLine(addNumbers(3, 5));  // Outputs 8
+	```
+    
+    Here, `Func<int, int, int>` means the delegate takes two `int` parameters and returns an `int`. The lambda expression `(a, b) => a + b` adds the two numbers.
+    
+3. **With Multiple Parameters (Takes multiple parameters, returns a string):**
+    
+    ```C#
+	Func<string, int, string> greet = (name, age) => $"Hello {name}, you are {age} years old.";
+	Console.WriteLine(greet("Alice", 30));  // Outputs "Hello Alice, you are 30 years old."
+	```
+    
+	This example takes a `string` (name) and an `int` (age), and returns a `string` formatted with the greeting message.
+    
+
+---
+
+### **Action<> Delegate**
+
+The `Action<>` delegate is used for methods that **don't return a value**. It can take up to 16 input parameters, but it **doesn't have a return type** (its return type is `void`).
+
+- **Syntax:** `Action<T1, T2, ..., T16>`
+    
+    - `T1, T2, ..., T16` are the types of the input parameters.
+        
+    - **No return type** (it's `void`).
+        
+
+**Key Points:**
+
+- `Action<>` is typically used for methods that perform an operation but don’t return anything.
+    
+- It’s often used for event handling, where the method doesn't return any value but performs an action.
+    
+
+#### **Examples:**
+
+1. **Basic Example (No parameters, no return value):**
+    
+    ```c#
+	Action greet = () => Console.WriteLine("Hello, World!");
+	greet();  // Outputs "Hello, World!"
+	```
+    
+    This example uses `Action` without parameters. The delegate simply prints "Hello, World!" when invoked.
+    
+2. **With Parameters (Takes two integers and performs an operation):**
+    
+    ```c#
+	Action<int, int> printSum = (a, b) => Console.WriteLine(a + b);
+	printSum(5, 10);  // Outputs 15
+	```
+    
+    In this case, `Action<int, int>` takes two integers and outputs their sum. Notice there’s no return value (`void`), it just prints the sum.
+    
+3. **With Multiple Parameters (Takes a string and an integer and prints a formatted message):**
+    
+    ```C#
+    Action<string, int> displayInfo = (name, age) => Console.WriteLine($"{name} is {age} years old.");
+	displayInfo("Alice", 30);  // Outputs "Alice is 30 years old."
+    ```
+    
+    This example uses `Action<string, int>` to print a formatted message without returning anything.
+    
+
+---
+
+### **Differences Between Func<> and Action<>:**
+
+|**Aspect**|**Func<>**|**Action<>**|
+|---|---|---|
+|**Return Type**|Has a return type (e.g., `TResult`)|No return type (returns `void`)|
+|**Use Case**|When you need to return a value|When you need to perform an action (void)|
+|**Maximum Parameters**|16 input parameters|16 input parameters|
+|**Typical Use Cases**|Returning results from operations|Event handling, performing side effects|
+
+---
+
+### **Using Func<> and Action<> with LINQ:**
+
+These delegates are frequently used with LINQ methods to represent queries and actions.
+
+- **Example with Func<> (Filter using LINQ):**
+    
+	```C#
+	var numbers = new List<int> { 1, 2, 3, 4, 5 };
+	Func<int, bool> isEven = n => n % 2 == 0;
 	
-	Copy
-	
-	`public delegate void EventHandler(); public event EventHandler OnEventOccurred;  public void TriggerEvent() {     OnEventOccurred?.Invoke(); }`
-	
-- **Func<T1, T2>:** A delegate type that returns a value and takes parameters.
-	
-	csharp
-	
-	Copy
-	
-	`Func<int, int, int> add = (a, b) => a + b;`
-	
-- **Action<T1>:** A delegate type that returns void and takes parameters.
-	
-	csharp
-	
-	Copy
-	
-	`Action<string> printMessage = message => Console.WriteLine(message);`
+	var evenNumbers = numbers.Where(isEven).ToList();
+	Console.WriteLine(string.Join(", ", evenNumbers));  // Outputs 2, 4
+	```
+
+	In this case, `Func<int, bool>` represents a function that takes an `int` and returns a `bool`. We use it to filter even numbers from a list using `LINQ`.
+
+- **Example with Action<> (Apply an operation to each item in a list):**
+    
+	```C#
+	var names = new List<string> { "Alice", "Bob", "Charlie" };
+	Action<string> greet = name => Console.WriteLine($"Hello, {name}!");
+	names.ForEach(greet);  // Outputs "Hello, Alice!", "Hello, Bob!", "Hello, Charlie!"
+	```
+    
+    Here, `Action<string>` is used to print a greeting for each name in the list.
+
+- **`Func<>`** is used when you need a method or lambda that **returns a value**.
+
+- **`Action<>`** is used when you need a method or lambda that **doesn't return a value** (i.e., it performs some operation or side effect).
+
+Both are very powerful tools in C# for simplifying delegate usage and making code more readable and functional. They are extensively used in LINQ queries, event handling, and other scenarios where methods or lambdas are passed around as arguments.
+### Summary:
+
+Today, we explored some of the most powerful features in C# like exception handling, working with value types and reference types, generics, and collections. The exercises provided practical examples of how to apply these concepts to real-world scenarios, like reading files, handling events, and using LINQ.
+
+Keep practicing these concepts to strengthen your understanding, and feel free to reach out if you have any questions!

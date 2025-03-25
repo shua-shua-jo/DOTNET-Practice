@@ -51,20 +51,20 @@
 
 ### Topics to Cover:
 
-- Exception Handling (try-catch-finally)
-- Value Types vs Reference Types
-  - Primitive Types
-  - Enum
-  - Struct
-  - Object / Class
-- var VS dynamic
-- Boxing vs Unboxing
-- Pass-by-value VS Pass-by-reference
-- Generics
-- Collections (Arrays, List, Dictionary, Queue, Stack, the IEnumerable interface)
-- Delegates and Events
-  - Func\<Ti, To>
-  - Action\<Ti>
+- Exception Handling (try-catch-finally) [[Day 3 Notes#1. **Exception Handling (try-catch-finally)**|Notes]]
+- Value Types vs Reference Types [[Day 3 Notes#2. **Value Types vs Reference Types**|Notes]]
+  - Primitive Types [[Day 3 Notes#**Value Types**|Notes]]
+  - Enum [[Day 3 Notes#**Enums (Enumerations)**|Notes]]
+  - Struct [[Day 3 Notes#**Structs (Structures)**|Notes]]
+  - Object / Class [[Day 3 Notes#**Reference Types**|Notes]]
+- var VS dynamic [[Day 3 Notes#3. **var vs dynamic**|Notes]]
+- Boxing vs Unboxing [[Day 3 Notes#4. **Boxing vs Unboxing**|Notes]]
+- Pass-by-value VS Pass-by-reference [[Day 3 Notes#5. **Pass-by-value vs Pass-by-reference**|Notes]]
+- Generics [[Day 3 Notes#6. **Generics**|Notes]]
+- Collections (Arrays, List, Dictionary, Queue, Stack, the IEnumerable interface) [[Day 3 Notes#7. **Collections**|Notes]]
+- Delegates and Events [[Day 3 Notes#8. **Delegates and Events**|Notes]]
+  - Func\<Ti, To> [[Day 3 Notes#**Func<> Delegate**|Notes]]
+  - Action\<Ti> [[Day 3 Notes#**Action<> Delegate**|Notes]]
 
 ### Hands-On Exercises:
 
