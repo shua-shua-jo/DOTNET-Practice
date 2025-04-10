@@ -1,0 +1,215 @@
+﻿@using Projector.Models.ViewModels
+@model AssignmentViewModel
+@{
+	ViewData["Title"] = "Project Assignments";
+}
+<style>
+    .return-link { 
+        width: max-content;
+    }
+</style>
+
+<a asp-action="Index" asp-controller="Projects" class="d-flex gap-1 align-items-center justify-content-center return-link mb-2 btn btn-primary">
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left-circle" viewBox="0 0 16 16">
+        <path fill-rule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8m15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0m-4.5-.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5z" />
+    </svg>
+    Return to Projects
+</a>
+
+<h3>Project Assignment - @Model.ProjectName</h3>
+<div class="row mb-4">
+    <div class="col-md-8">
+        <div class="input-group">
+            <select id="availablePersonsDropdown" class="form-select">
+                <option class="text-secondary" value="" selected disabled>Select a Person</option>
+	            @foreach (var mem in Model.NotMembers)
+	            {
+		            <option value="@mem.Id">@($"{mem.FirstName} {mem.LastName} ({mem.Username})")</option>
+	            }
+            </select>
+            <button id="assignButton" class="btn btn-primary" type="button" disabled>Add</button>
+        </div>
+    </div>
+    <div class="action-status text-info"></div>
+</div>
+
+<div id="currentMembersSection">
+    @if (Model.HasCurrMembers)
+    {
+        <h3>Current Members</h3>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Username</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var mem in Model.CurrMembers)
+                {
+                    <tr id="memberRow-@mem.Id">
+                        <td>@mem.LastName, @mem.FirstName</td>
+                        <td>@mem.Username</td>
+                        <td>
+                            <button class="btn btn-danger btn-sm remove-member"
+                                    data-person-id="@mem.Id">
+                                Remove
+                            </button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <div class="alert alert-info" id="noMembersMessage">
+            This project currently has no members.
+        </div>
+    }
+</div>
+<div asp-validation-summary="All" class="text-danger"></div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // toggle assign button based on dropdown selection
+            $('#availablePersonsDropdown').change(function() {
+                $('#assignButton').prop('disabled', $(this).val() === '');
+            });
+
+            // assgin member
+            document.getElementById('assignButton').addEventListener('click', async function() {
+              const projectId = @Model.ProjectId;
+              const personId = document.getElementById('availablePersonsDropdown').value;
+
+              if (!personId) return;
+
+              const button = this;
+              button.disabled = true;
+              button.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Adding...';
+
+              try {
+                const response = await fetch(`/projects/${projectId}/assignments/assign/${personId}`, {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                    'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+                  }
+                });
+
+                if (!response.ok) {
+                  throw new Error(await response.text());
+                }
+
+                const data = await response.json();
+
+                if (data.success) {
+                  const person = data.person;
+                  addMemberToTable(person);
+                  document.querySelector(`#availablePersonsDropdown option[value="${personId}"]`).remove();
+                  document.getElementById('availablePersonsDropdown').value = '';
+                  document.querySelector('.action-status').textContent = 'Member added successfully';
+                }
+              } catch (error) {
+                document.querySelector('.action-status').textContent = error.message || 'Error adding member', 'error';
+              } finally {
+                button.innerHTML = 'Add';
+                button.disabled = true;
+              }
+            });
+
+            // remove member
+            document.addEventListener('click', async function(e) {
+              if (e.target.classList.contains('remove-member')) {
+                const projectId = @Model.ProjectId;
+                const personId = e.target.dataset.personId;
+                console.log(personId);
+                const button = e.target;
+
+                button.disabled = true;
+                button.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Removing...';
+
+                try {
+                  const response = await fetch(`/projects/${projectId}/assignments/unassign/${personId}`, {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json',
+                      'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+                    }
+                  });
+
+                  if (!response.ok) {
+                    throw new Error(await response.text());
+                  }
+
+                  const data = await response.json();
+
+                  if (data.success) {
+                    const person = data.person;
+                    document.getElementById(`memberRow-${personId}`).remove();
+
+                    const dropdown = document.getElementById('availablePersonsDropdown');
+                    const option = document.createElement('option');
+                    option.value = person.id;
+                    option.text = `${person.lastName}, ${person.firstName} (${person.userName})`;
+                    dropdown.appendChild(option);
+
+                    if (!document.querySelector('#currentMembersSection tbody tr')) {
+                      document.getElementById('currentMembersSection').innerHTML =
+                        '<div class="alert alert-info" id="noMembersMessage">' +
+                        'This project currently has no members.</div>';
+                    }
+
+                    document.querySelector('.action-status').textContent = 'Member removed successfully';
+                  }
+                } catch (error) {
+                  document.querySelector('.action-status').textContent = error.message || 'Error removing member', 'error';
+                } finally {
+                  button.innerHTML = 'Remove';
+                  button.disabled = true;
+                }
+              }
+            });
+
+            function addMemberToTable(person) {
+                let tableBody = $('#currentMembersSection tbody');
+
+                // create table if it doesn't exist
+                if (tableBody.length === 0) {
+                    $('#noMembersMessage').remove();
+                    $('#currentMembersSection').html(`
+                        <h3>Current Members</h3>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Username</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    `);
+                    tableBody = $('#currentMembersSection tbody');
+                }
+
+                // add new row
+                tableBody.append(`
+                    <tr id="memberRow-${person.id}">
+                        <td>${person.lastName}, ${person.firstName}</td>
+                        <td>${person.userName}</td>
+                        <td>
+                            <button class="btn btn-danger btn-sm remove-member"
+                                    data-person-id="${person.id}">
+                                Remove
+                            </button>
+                        </td>
+                    </tr>
+                `);
+            }
+
+        });
+    </script>
+}

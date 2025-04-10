@@ -92,6 +92,11 @@
   - IQueryable vs IEnumerable
 - Connecting to HTTP services using HttpClient
 
+ASP.NET CORE
+MVC
+
+Make an address book just like in phone;
+
 ---
 
 # Key C# & .NET Terminologies

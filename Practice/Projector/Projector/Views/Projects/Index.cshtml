@@ -1,0 +1,45 @@
+﻿@using Projector.Models.ViewModels
+@model ProjectsViewModel
+@{
+    ViewData["Title"] = "Home Page";
+}
+<h1 class="mb-4">The Projector</h1>
+<div class="container">
+    <div class="row">
+        <div class="col-8 projects-table">
+            <table class="table table-hover align-middle">
+                <thead>
+                    <tr class="table-dark">
+                        <td>Project Name</td>
+                        <td>Budget</td>
+                        <td>Tasks</td>
+                    </tr>
+                </thead>
+                <tbody class="table-group-divider">
+                    @foreach (var project in Model.Projects)
+                    {
+                        <tr>
+                            <td>@project.Name</td>
+                            <td>@project.FormattedBudget</td>
+                            <td>
+                                <div class="d-flex justify-content-around gap-2">
+                                    <a asp-action="Assignment" asp-route-projectId="@project.Id" class="btn btn-outline-primary">Assignment</a>
+                                    <a asp-action="Details" class="btn btn-outline-info" asp-route-id="@project.Id">Details</a>
+                                    <a asp-action="Edit" class="btn btn-outline-warning" asp-route-id="@project.Id">Edit</a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="col">
+            <h4>Other Tasks</h4>
+            <div class="d-flex flex-column gap-2">
+                <a asp-action="Create" asp-controller="Projects" class="btn btn-outline-primary">Create Project...</a>
+                <a asp-action="Create" asp-controller="Persons" class="btn btn-outline-primary">Create Person...</a>
+            </div>
+        </div>
+    </div>
+</div>
+<div asp-validation-summary="All" class="text-danger"></div>

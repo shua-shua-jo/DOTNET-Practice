@@ -1,0 +1,84 @@
+﻿
+
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model PhoneBook.Models.Contact;
+@{
+    ViewData["Title"] = "Edit Contact Page";
+}
+
+<h2>Edit contact</h2>
+
+<form asp-action="Edit" method="post">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="Id" />
+
+    <div class="form-group">
+        <label for="LastName">Last Name</label>
+        <input asp-for="LastName" class="form-control" required />
+    </div>
+
+    <div class="form-group">
+        <label for="FirstName">First Name</label>
+        <input asp-for="FirstName" class="form-control" required />
+    </div>
+
+    <div class="form-group">
+        <label for="Company">Company</label>
+        <input asp-for="Company" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label for="Email">Email</label>
+        <input asp-for="Email" type="email" class="form-control" />
+    </div>
+
+    <h4>Phone Numbers</h4>
+    <div id="phoneNumbersContainer">
+        @for (int i = 0;  i < @Model.PhoneNumbers.Count; i++)
+        {
+            <div class="form-group phone-entry">
+                <select name="PhoneLabels[@i]" class="form-control">
+                    <option value="Primary" selected="@(Model.PhoneNumbers[i].Label == "Primary")">Primary</option>
+                    <option value="Home" selected="@(Model.PhoneNumbers[i].Label == "Home")">Home</option>
+                    <option value="Mobile" selected="@(Model.PhoneNumbers[i].Label == "Mobile")">Mobile</option>
+                    <option value="Pager" selected="@(Model.PhoneNumbers[i].Label == "Pager")">Pager</option>
+                    <option value="Secondary" selected="@(Model.PhoneNumbers[i].Label == "Secondary")">Secondary</option>
+                </select>
+                <input name="PhoneNumber[@i]" class="form-control" value="@Model.PhoneNumbers[i].Number" placeholder="Enter phone number" />
+                <button type="button" class="btn btn-danger remove-phone" onclick="removePhone(this)">Remove</button>
+            </div>
+        }
+    </div>
+
+    <button type="button" class="btn btn-secondary" onclick="addPhone()">Add Phone Number</button>
+
+    <br /><br />
+    <button type="submit" class="btn btn-primary">Save Contact</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+</form>
+
+<script>
+    function addPhone() {
+        var container = document.getElementById("phoneNumbersContainer");
+        var div = document.createElement("div");
+        div.className = "form-group phone-entry";
+        div.innerHTML = `
+            <select name="PhoneLabels" class="form-control">
+                <option value="Primary">Primary</option>
+                <option value="Home">Home</option>
+                <option value="Mobile">Mobile</option>
+                <option value="Pager">Pager</option>
+                <option value="Secondary">Secondary</option>
+            </select>
+            <input name="PhoneNumbers" class="form-control" placeholder="Enter phone number" />
+            <button type="button" class="btn btn-danger remove-phone" onclick="removePhone(this)">Remove</button>
+        `;
+        container.appendChild(div);
+    }
+
+    function removePhone(button) {
+        button.parentElement.remove();
+    }
+</script>

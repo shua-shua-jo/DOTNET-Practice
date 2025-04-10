@@ -26,7 +26,7 @@
         
     - `LinkedList<T>`
         
-- **IEnumerable**** and IEnumerator**:
+- **IEnumerable**\*\* and **IEnumerator**\*\*:
     
     - `IEnumerable<T>` allows iteration over a collection using `foreach`.
         
@@ -141,12 +141,17 @@ using (SqlConnection conn = new SqlConnection("your_connection_string"))
             while (reader.Read())
             {
                 Console.WriteLine(reader["Username"].ToString());
+                
             }
         }
     }
 }
 ```
 
+System.Data.Common:
+IDbConnection
+IDbCommand
+IDbDataReader
 # 5. Entity Framework (EF)
 
 ### **Introduction to Entity Framework**
