@@ -38,7 +38,7 @@ namespace Projector.Controllers
                 ModelState.AddModelError("InvSign", "Invalid login attempt.");
                 return View(model);
             }
-            var principal = _signInService.CreateClaimsPrincipalAsync(model.Username);
+            var principal = _signInService.CreateClaimsPrincipalAsync(user.FirstName);
             var authProperties = _signInService.CreateAuthProperties();
 
             await _signInService.SignInAsync(HttpContext, principal, authProperties);

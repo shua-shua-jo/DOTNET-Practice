@@ -29,10 +29,8 @@ namespace Projector.Controllers
             var result = await _personService.CreateNewPersonAsync(model);
             if (!result.IsSuccessful)
             {
-                for (int i = 0; i < result.Errors.Count; i++)
-                {
-                    ModelState.AddModelError(string.Empty, result.Errors[i]);
-                }
+                ModelState.AddModelError(string.Empty, result.Errors[0]);
+                
                 return View(model);
             }
             return RedirectToAction("Index", "Projects");

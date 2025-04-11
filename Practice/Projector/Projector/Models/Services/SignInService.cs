@@ -15,10 +15,10 @@ namespace Projector.Models.Services
             _context = context;
         }
 
-        public async Task<User> AuthenticateUserAsync(string username, string password)
+        public async Task<Person> AuthenticateUserAsync(string username, string password)
         {
-            var user = await _context.Users
-                .FirstOrDefaultAsync(u => u.Username == username);
+            var user = await _context.Persons
+                .FirstOrDefaultAsync(u => u.UserName == username);
 
             // Return null if user not found or password doesn't match
             if (user == null || user.Password != password)
@@ -29,11 +29,11 @@ namespace Projector.Models.Services
             return user;
 
         }
-        public ClaimsPrincipal CreateClaimsPrincipalAsync(string username)
+        public ClaimsPrincipal CreateClaimsPrincipalAsync(string firstName)
         {
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Name, username)
+                new Claim(ClaimTypes.Name, firstName)
             };
 
             return new ClaimsPrincipal(new ClaimsIdentity(claims, "CookieAuth"));

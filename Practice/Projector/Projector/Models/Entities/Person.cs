@@ -8,9 +8,10 @@ namespace Projector.Models.Entities
         [Key]
         public int Id { get; set; }
         [Required, MaxLength(50)]
-        [RegularExpression("[A-Za-z]+")]
+        [RegularExpression("[A-Za-z ]+")]
         public required string LastName { get; set; }
         [Required, MaxLength(50)]
+        [RegularExpression("[A-Za-z ]+")]
         public required string FirstName { get; set; }
         [Required, EmailAddress, MinLength(5), MaxLength(200)]
         [DataType(DataType.EmailAddress)]

@@ -31,12 +31,7 @@
                     @if (User.Identity.IsAuthenticated)
                     {
                         <div class="d-flex flex-row justify-content-center align-items-center gap-1">
-                        @{
-                            var name = User.Identity.Name;
-                            var input = @name?.Substring(0, name.IndexOf('@'));
-                            string un = CultureInfo.InvariantCulture.TextInfo.ToTitleCase(input);
-                        }
-                        <p class="m-0">Welcome, @un!</p>
+                        <p class="m-0">Welcome, @User.Identity.Name!</p>
                         <form asp-action="Logout" asp-controller="SignIn">
                             @Html.AntiForgeryToken()
                             <button type="submit" class="btn btn-primary signout-btn">Sign Out

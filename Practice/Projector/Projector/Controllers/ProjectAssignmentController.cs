@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Projector.Models.Services;
 
 namespace Projector.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("projects/{projectId}/assignments")]
     public class ProjectAssignmentController : Controller
