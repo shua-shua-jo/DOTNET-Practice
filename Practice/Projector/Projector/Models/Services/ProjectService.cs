@@ -44,7 +44,7 @@ namespace Projector.Models.Services
             var project = _context.Projects.FirstOrDefault(p => p.Code == args.Code);
             if (project == null)
             {
-                project = new Project { Name = args.Name, Code = args.Code, Budget = args.Budget, Remarks = args.Remarks };
+                project = new Project { Name = args.Name, Code = args.Code, Budget = args.Budget, Remarks = args.Remarks, Currency = args.SelectedCurrency };
                 _context.Add(project);
                 await _context.SaveChangesAsync();
                 return CommandResult.WithData<ProjectItemDTO>.Success<ProjectItemDTO>( new ProjectItemDTO { Id = project.Id});
@@ -86,6 +86,7 @@ namespace Projector.Models.Services
                 Name = project.Name,
                 Budget = project.Budget,
                 Remarks = project.Remarks,
+                SelectedCurrency = project.Currency
             };
         }
         public async Task<ProjectDetailsViewModel> GetProjectAndMembersByIdAsync(int projectId)
@@ -123,5 +124,6 @@ namespace Projector.Models.Services
                 }).ToList()
             };
         }
+       
     }
 }

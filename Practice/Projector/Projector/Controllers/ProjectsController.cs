@@ -26,7 +26,7 @@ namespace Projector.Controllers
         }
         public IActionResult Create()
         {
-            return View();
+            return View(new CreateOrEditProjectInputModel());
         }
         [HttpPost]
         [ValidateAntiForgeryToken]

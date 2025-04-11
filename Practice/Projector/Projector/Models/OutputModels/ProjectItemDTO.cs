@@ -6,7 +6,7 @@
         public string Name { get; set; }
 
         public decimal Budget { get; set; }
+        public string Currency { get; set; }
         // never use this formatting
-        public string FormattedBudget => Budget.ToString("C4");
     }
 }
