@@ -1,5 +1,8 @@
 ﻿
 
+using System.Globalization;
+using Projector.Models.Helpers;
+
 namespace Projector.Models.ViewModels
 {
     public class ProjectDetailsViewModel
@@ -9,7 +12,8 @@ namespace Projector.Models.ViewModels
         public string Remarks { get; set; }
 
         public decimal Budget { get; set;  }
-        public string FormattedBudget => Budget.ToString("C4");
+        public string Currency { get; set; }
+        public string FormattedBudget => CurrencyHelper.FormatCurrency(Budget, Currency);
         public List<ProjectMembersViewModel> Members { get; set; } = [];
 
         public bool HaveMembers => Members.Any();

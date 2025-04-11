@@ -1,4 +1,5 @@
-﻿using Projector.Models.OutputModels;
+﻿using Projector.Models.Helpers;
+using Projector.Models.OutputModels;
 
 namespace Projector.Models.ViewModels
 {

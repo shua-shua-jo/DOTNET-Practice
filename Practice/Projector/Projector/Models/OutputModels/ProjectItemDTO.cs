@@ -1,4 +1,6 @@
-﻿namespace Projector.Models.OutputModels
+﻿using Projector.Models.Helpers;
+
+namespace Projector.Models.OutputModels
 {
     public class ProjectItemDTO
     {
@@ -7,6 +9,6 @@
 
         public decimal Budget { get; set; }
         public string Currency { get; set; }
-        // never use this formatting
+        public string FormattedBudget => CurrencyHelper.FormatCurrency(Budget, Currency);
     }
 }

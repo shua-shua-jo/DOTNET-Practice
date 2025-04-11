@@ -46,7 +46,7 @@
             <div class="form-group col-md-4">
                 <label asp-for="SelectedCurrency">Currency<span class="text-danger">*</span></label>
                 <select asp-for="SelectedCurrency" asp-items="Model.CurrencyOptions" class="form-control">
-                    <option value="">Select Currency</option>
+                    <option value="" class="text-secondary" selected disabled>Select Currency</option>
                 </select>
             </div>
             <div class="form-group col-md-8">

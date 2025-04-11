@@ -24,7 +24,8 @@ namespace Projector.Models.Services
             {
                 Id = p.Id,
                 Name = p.Name,
-                Budget = p.Budget
+                Budget = p.Budget,
+                Currency = p.Currency,
             }).ToListAsync();
 
             if (!projects.Any())
@@ -44,7 +45,14 @@ namespace Projector.Models.Services
             var project = _context.Projects.FirstOrDefault(p => p.Code == args.Code);
             if (project == null)
             {
-                project = new Project { Name = args.Name, Code = args.Code, Budget = args.Budget, Remarks = args.Remarks, Currency = args.SelectedCurrency };
+                project = new Project 
+                { 
+                    Name = args.Name, 
+                    Code = args.Code, 
+                    Budget = args.Budget, 
+                    Remarks = args.Remarks, 
+                    Currency = args.SelectedCurrency 
+                };
                 _context.Add(project);
                 await _context.SaveChangesAsync();
                 return CommandResult.WithData<ProjectItemDTO>.Success<ProjectItemDTO>( new ProjectItemDTO { Id = project.Id});
@@ -67,6 +75,7 @@ namespace Projector.Models.Services
                 project.Code = args.Code;
                 project.Budget = args.Budget;
                 project.Remarks = args.Remarks;
+                project.Currency = args.SelectedCurrency;
                 await _context.SaveChangesAsync();
                 return CommandResult.WithData<ProjectItemDTO>.Success<ProjectItemDTO>(new ProjectItemDTO { Id = project.Id });
             }
@@ -98,6 +107,7 @@ namespace Projector.Models.Services
                 Name = p.Name,
                 Budget = p.Budget,
                 Remarks = p.Remarks,
+                Currency = p.Currency,
                 Members = p.Persons
                 .Select(person => new PersonDTO { 
                     Id = person.Id, 
@@ -116,10 +126,12 @@ namespace Projector.Models.Services
                 Name = project.Name,
                 Budget = project.Budget,
                 Remarks = project.Remarks,
+                Currency = project.Currency,
                 Members = project.Members
                 .Select(member => new ProjectMembersViewModel
                 {
-                    FullName = $"{member.FirstName} {member.LastName}"
+                    FirstName = member.FirstName,
+                    LastName = member.LastName
 
                 }).ToList()
             };

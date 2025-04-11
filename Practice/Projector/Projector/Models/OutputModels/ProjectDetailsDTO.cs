@@ -8,6 +8,8 @@
         public string Remarks { get; set; }
 
         public decimal Budget { get; set; }
+        public string Currency { get; set; }
+
         public List<PersonDTO> Members { get; set; } = [];
     }
 }
