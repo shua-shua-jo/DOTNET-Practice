@@ -1,4 +1,5 @@
 ﻿using System.Text.RegularExpressions;
+using Microsoft.EntityFrameworkCore;
 using Projector.Data;
 using Projector.Models.Entities;
 using Projector.Models.InputModels;
@@ -24,7 +25,18 @@ namespace Projector.Models.Services
                 return CommandResult.Success();
             }
             return CommandResult.Error("Username already exists.");
+        }
 
+        public async Task<List<PersonDTO>> GetAllPersonsAsync()
+        {
+            var persons = await _context.Persons.ToListAsync();
+            return persons.Select(p => new PersonDTO
+            {
+                Id = p.Id,
+                FirstName = p.FirstName,
+                LastName = p.LastName,
+                Username = p.UserName
+            }).ToList();
         }
     }
 }

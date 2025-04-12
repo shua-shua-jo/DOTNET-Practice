@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Projector.Models.InputModels;
+using Projector.Models.OutputModels;
 using Projector.Models.Services;
 
 namespace Projector.Controllers
@@ -13,6 +14,13 @@ namespace Projector.Controllers
         {
             _personService = personService;
         }
+
+        public async Task<IActionResult> Index()
+        {
+            var persons = await _personService.GetAllPersonsAsync();
+            return View(persons);
+        }
+
         public IActionResult Create()
         {
             return View();
