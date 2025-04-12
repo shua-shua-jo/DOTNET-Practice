@@ -49,4 +49,48 @@ button.accept-policy {
 
 .signout-btn {
     font-size: 10pt;
+    background: transparent;
+    border: none;
+    color: var(--bs-danger);
+    padding: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.2s ease;
+    font-weight: 500;
+}
+
+.signout-btn:hover {
+    color: var(--bs-danger-dark);
+    background: rgba(var(--bs-danger-rgb), 0.1);
+    border-radius: var(--bs-border-radius);
+}
+
+.signout-btn svg {
+    transition: transform 0.2s ease;
+}
+
+.signout-btn:hover svg {
+    transform: translateX(3px);
+}
+
+.user-welcome {
+    background: var(--bs-gray-100);
+    padding: 0.5rem 1rem;
+    border-radius: 50px;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    box-shadow: var(--bs-box-shadow-sm);
+}
+
+.welcome-text {
+    margin: 0;
+    font-weight: 500;
+    color: var(--bs-gray-800);
+}
+
+.username {
+    color: var(--bs-primary);
+    font-weight: 600;
 }
