@@ -44,11 +44,11 @@ namespace Projector.Models.Services
             {
                 project = new Project 
                 { 
-                    Name = args.Name, 
-                    Code = args.Code, 
+                    Name = args.Name!, 
+                    Code = args.Code!, 
                     Budget = args.Budget, 
                     Remarks = args.Remarks, 
-                    Currency = args.SelectedCurrency 
+                    Currency = args.SelectedCurrency!
                 };
                 _context.Add(project);
                 await _context.SaveChangesAsync();
@@ -68,11 +68,11 @@ namespace Projector.Models.Services
 
             if (project != null)
             {
-                project.Name = args.Name;
-                project.Code = args.Code;
+                project.Name = args.Name!;
+                project.Code = args.Code!;
                 project.Budget = args.Budget;
                 project.Remarks = args.Remarks;
-                project.Currency = args.SelectedCurrency;
+                project.Currency = args.SelectedCurrency!;
                 await _context.SaveChangesAsync();
                 return CommandResult.WithData<ProjectItemDTO>.Success<ProjectItemDTO>(new ProjectItemDTO { Id = project.Id });
             }

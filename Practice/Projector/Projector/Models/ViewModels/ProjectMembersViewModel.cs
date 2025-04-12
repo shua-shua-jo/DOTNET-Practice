@@ -10,8 +10,8 @@ namespace Projector.Models.ViewModels
 
         public ProjectMembersViewModel(PersonDTO dto)
         {
-            FirstName = dto.FirstName;
-            LastName = dto.LastName;
+            FirstName = dto.FirstName!;
+            LastName = dto.LastName!;
         }
     }
 }

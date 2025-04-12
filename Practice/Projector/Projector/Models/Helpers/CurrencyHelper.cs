@@ -11,7 +11,7 @@ namespace Projector.Models.Helpers
             {"PHP", "Philippine Peso (₱)"},
             // Add more as needed
         };
-        public static string FormatCurrency(decimal amount, string currencyCode)
+        public static string FormatCurrency(decimal amount, string? currencyCode)
         {
             var culture = currencyCode switch
             {

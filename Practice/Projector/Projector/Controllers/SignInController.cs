@@ -21,11 +21,11 @@ namespace Projector.Controllers
 
         public IActionResult Index()
         {
-            if(!User.Identity.IsAuthenticated)
+            if(User.Identity?.IsAuthenticated == true)
             {
-                return View();
+                return RedirectToAction("Index", "Projects");
             }
-            return RedirectToAction("Index", "Projects");
+            return View();
         }
         [HttpPost]
         [ValidateAntiForgeryToken]

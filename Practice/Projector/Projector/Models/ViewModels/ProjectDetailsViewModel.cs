@@ -17,11 +17,11 @@ namespace Projector.Models.ViewModels
 
         private ProjectDetailsViewModel(ProjectDetailsDTO dto)
         {
-            Code = dto.Code;
-            Name = dto.Name;
+            Code = dto.Code!;
+            Name = dto.Name!;
             Budget = dto.Budget;
-            Remarks = dto.Remarks;
-            Currency = dto.Currency;
+            Remarks = dto.Remarks!;
+            Currency = dto.Currency!;
             Members = dto.Members.Select(m => new ProjectMembersViewModel(m)).ToList();
         }
 
