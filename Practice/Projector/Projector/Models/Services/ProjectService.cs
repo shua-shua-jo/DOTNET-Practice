@@ -1,10 +1,9 @@
-﻿using Microsoft.Data.SqlClient;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Projector.Data;
 using Projector.Models.Entities;
 using Projector.Models.InputModels;
-using Projector.Models.ViewModels;
 using Projector.Models.OutputModels;
+using Projector.Models.Helpers;
 using System.Text.RegularExpressions;
 
 namespace Projector.Models.Services
@@ -34,45 +33,71 @@ namespace Projector.Models.Services
 
         public async Task<CommandResult.WithData<ProjectItemDTO>> CreateNewProjectAsync(CreateOrEditProjectInputModel args)
         {
+            if (args.Name == null || args.Code == null || args.SelectedCurrency == null)
+            {
+                return CommandResult.WithData<ProjectItemDTO>.Error<ProjectItemDTO>("Required fields cannot be null.");
+            }
+
             if (!Regex.IsMatch(args.Budget.ToString(), @"^\d{1,18}(\.\d{0,4})?$"))
             {
                 return CommandResult.WithData<ProjectItemDTO>.Error<ProjectItemDTO>("Value exceeds budget limits.");
             }
 
-            var project = _context.Projects.FirstOrDefault(p => p.Code == args.Code);
+            if (!CurrencyHelper.Currencies.ContainsKey(args.SelectedCurrency))
+            {
+                return CommandResult.WithData<ProjectItemDTO>.Error<ProjectItemDTO>("Invalid currency selected.");
+            }
+
+            var project = await _context.Projects.FirstOrDefaultAsync(p => p.Code == args.Code);
             if (project == null)
             {
                 project = new Project 
                 { 
-                    Name = args.Name!, 
-                    Code = args.Code!, 
+                    Name = args.Name, 
+                    Code = args.Code, 
                     Budget = args.Budget, 
-                    Remarks = args.Remarks, 
-                    Currency = args.SelectedCurrency!
+                    Remarks = args.Remarks ?? "", 
+                    Currency = args.SelectedCurrency
                 };
                 _context.Add(project);
                 await _context.SaveChangesAsync();
                 return CommandResult.WithData<ProjectItemDTO>.Success<ProjectItemDTO>(new ProjectItemDTO { Id = project.Id});
             }
-            return CommandResult.WithData<ProjectItemDTO>.Error<ProjectItemDTO>("Project already exists.");
+            return CommandResult.WithData<ProjectItemDTO>.Error<ProjectItemDTO>("Project code already exists.");
         }
 
         public async Task<CommandResult.WithData<ProjectItemDTO>> EditProjectAsync(int id, CreateOrEditProjectInputModel args)
         {
+            if (args.Name == null || args.Code == null || args.SelectedCurrency == null)
+            {
+                return CommandResult.WithData<ProjectItemDTO>.Error<ProjectItemDTO>("Required fields cannot be null.");
+            }
+
             if (!Regex.IsMatch(args.Budget.ToString(), @"^\d{1,18}(\.\d{0,4})?$"))
             {
                 return CommandResult.WithData<ProjectItemDTO>.Error<ProjectItemDTO>("Value exceeds budget limits.");
             }
 
-            var project = _context.Projects.FirstOrDefault(p => p.Id == id);
+            if (!CurrencyHelper.Currencies.ContainsKey(args.SelectedCurrency))
+            {
+                return CommandResult.WithData<ProjectItemDTO>.Error<ProjectItemDTO>("Invalid currency selected.");
+            }
 
+            var project = await _context.Projects.FirstOrDefaultAsync(p => p.Id == id);
             if (project != null)
             {
-                project.Name = args.Name!;
-                project.Code = args.Code!;
+                // check if another project alreaady uses this code
+                var existingProject = await _context.Projects.FirstOrDefaultAsync(p => p.Code == args.Code && p.Id != id);
+                if (existingProject != null)
+                {
+                    return CommandResult.WithData<ProjectItemDTO>.Error<ProjectItemDTO>("Project code already exists.");
+                }
+
+                project.Name = args.Name;
+                project.Code = args.Code;
                 project.Budget = args.Budget;
-                project.Remarks = args.Remarks;
-                project.Currency = args.SelectedCurrency!;
+                project.Remarks = args.Remarks ?? "";
+                project.Currency = args.SelectedCurrency;
                 await _context.SaveChangesAsync();
                 return CommandResult.WithData<ProjectItemDTO>.Success<ProjectItemDTO>(new ProjectItemDTO { Id = project.Id });
             }

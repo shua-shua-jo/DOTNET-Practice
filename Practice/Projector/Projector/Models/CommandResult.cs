@@ -35,7 +35,7 @@
 
         public static WithData<T> Error<T>(string v) where T: class, new()
         {
-            return new WithData<T>(default) { Errors = new List<string> { v } };
+            return new WithData<T>(new T()) { Errors = new List<string> { v } };
         }
 
         public class WithData<TData> : CommandResult where TData: class, new()
