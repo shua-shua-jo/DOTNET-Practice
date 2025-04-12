@@ -14,6 +14,11 @@ namespace Projector.Data
                 .HasMany(e => e.Persons)
                 .WithMany(e => e.Projects)
                 .UsingEntity("ProjectAssignments");
+
+            modelBuilder.Entity<Person>()
+                .Property(e => e.UserName)
+                .UseCollation("SQL_Latin1_General_CP1_CS_AS");  // CS = Case Sensitive
+
             modelBuilder.Entity<Person>().HasData(
                 new Person { Id = 1, FirstName = "Admin", LastName = "Test", UserName = "admin@test.com", Password = "admin12345"}
             );

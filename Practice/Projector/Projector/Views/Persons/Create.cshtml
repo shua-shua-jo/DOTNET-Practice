@@ -32,7 +32,16 @@
     </div>
     <div class="form-group">
         <label asp-for="UserName" class="control-label">Username</label>
-        <input asp-for="UserName" type="email" minlength="5" maxlength="200" required class="form-control" placeholder="Enter username" autocomplete="off" />
+        <input asp-for="UserName" 
+               type="email" 
+               minlength="5" 
+               maxlength="200" 
+               required 
+               class="form-control" 
+               placeholder="Enter username" 
+               autocomplete="off"
+               spellcheck="false"
+               autocapitalize="none" />
         <span asp-validation-for="UserName" class="text-danger"></span>
     </div>
     <div class="form-group">

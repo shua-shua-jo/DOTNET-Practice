@@ -18,7 +18,8 @@ namespace Projector.Models.Services
         public async Task<Person?> AuthenticateUserAsync(string username, string password)
         {
             var user = await _context.Persons
-                .FirstOrDefaultAsync(u => u.UserName == username);
+                .Where(u => u.UserName == username)
+                .FirstOrDefaultAsync();
 
             // Return null if user not found or password doesn't match
             if (user == null || user.Password != password)
@@ -27,8 +28,8 @@ namespace Projector.Models.Services
             }
 
             return user;
-
         }
+
         public ClaimsPrincipal CreateClaimsPrincipalAsync(string firstName)
         {
             var claims = new List<Claim>
