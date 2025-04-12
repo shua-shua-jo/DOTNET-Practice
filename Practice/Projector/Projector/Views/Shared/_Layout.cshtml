@@ -28,7 +28,7 @@
                              <a class="nav-link text-dark" asp-area="" asp-controller="Persons" asp-action="Index">Persons</a>
                          </li> 
                      </ul> 
-                    @if (User.Identity.IsAuthenticated)
+                    @if (User.Identity?.IsAuthenticated == true)
                     {
                         <div class="d-flex flex-row justify-content-center align-items-center gap-1">
                         <p class="m-0">Welcome, @User.Identity.Name!</p>
