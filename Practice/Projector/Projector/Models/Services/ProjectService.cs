@@ -17,7 +17,8 @@ namespace Projector.Models.Services
         {
             _context = context;
         }
-        public async Task<ProjectsViewModel> GetProjectsViewModelAsync()
+
+        public async Task<List<ProjectItemDTO>> GetProjectsAsync()
         {
             var projects = await _context.Projects
             .Select(p => new ProjectItemDTO
@@ -28,13 +29,9 @@ namespace Projector.Models.Services
                 Currency = p.Currency,
             }).ToListAsync();
 
-            if (!projects.Any())
-            {
-                return null;
-            }
-
-            return new ProjectsViewModel { Projects = projects };
+            return projects;
         }
+
         public async Task<CommandResult.WithData<ProjectItemDTO>> CreateNewProjectAsync(CreateOrEditProjectInputModel args)
         {
             if (!Regex.IsMatch(args.Budget.ToString(), @"^\d{1,18}(\.\d{0,4})?$"))
@@ -55,11 +52,11 @@ namespace Projector.Models.Services
                 };
                 _context.Add(project);
                 await _context.SaveChangesAsync();
-                return CommandResult.WithData<ProjectItemDTO>.Success<ProjectItemDTO>( new ProjectItemDTO { Id = project.Id});
+                return CommandResult.WithData<ProjectItemDTO>.Success<ProjectItemDTO>(new ProjectItemDTO { Id = project.Id});
             }
             return CommandResult.WithData<ProjectItemDTO>.Error<ProjectItemDTO>("Project already exists.");
-
         }
+
         public async Task<CommandResult.WithData<ProjectItemDTO>> EditProjectAsync(int id, CreateOrEditProjectInputModel args)
         {
             if (!Regex.IsMatch(args.Budget.ToString(), @"^\d{1,18}(\.\d{0,4})?$"))
@@ -80,9 +77,9 @@ namespace Projector.Models.Services
                 return CommandResult.WithData<ProjectItemDTO>.Success<ProjectItemDTO>(new ProjectItemDTO { Id = project.Id });
             }
             return CommandResult.WithData<ProjectItemDTO>.Error<ProjectItemDTO>("Project not found.");
-
         }
-        public async Task<CreateOrEditProjectInputModel> GetProjectByIdAsync(int projectId)
+
+        public async Task<CreateOrEditProjectInputModel?> GetProjectByIdAsync(int projectId)
         {
             var project = await _context.Projects.FirstOrDefaultAsync(p => p.Id == projectId);
             if (project == null)
@@ -98,44 +95,28 @@ namespace Projector.Models.Services
                 SelectedCurrency = project.Currency
             };
         }
-        public async Task<ProjectDetailsViewModel> GetProjectAndMembersByIdAsync(int projectId)
-        {
-            var project = await _context.Projects.Select(p => new ProjectDetailsDTO
-            {
-                Id = p.Id,
-                Code = p.Code,
-                Name = p.Name,
-                Budget = p.Budget,
-                Remarks = p.Remarks,
-                Currency = p.Currency,
-                Members = p.Persons
-                .Select(person => new PersonDTO { 
-                    Id = person.Id, 
-                    FirstName = person.FirstName,
-                    LastName = person.LastName,
-                    Username = person.UserName,
-                }).ToList()
-            }).FirstOrDefaultAsync(p => p.Id == projectId);
-            if (project == null)
-            {
-                return null;
-            }
-            return new ProjectDetailsViewModel
-            {
-                Code = project.Code,
-                Name = project.Name,
-                Budget = project.Budget,
-                Remarks = project.Remarks,
-                Currency = project.Currency,
-                Members = project.Members
-                .Select(member => new ProjectMembersViewModel
-                {
-                    FirstName = member.FirstName,
-                    LastName = member.LastName
 
-                }).ToList()
-            };
+        public async Task<ProjectDetailsDTO?> GetProjectDetailsAsync(int projectId)
+        {
+            return await _context.Projects
+                .Where(p => p.Id == projectId)
+                .Select(p => new ProjectDetailsDTO
+                {
+                    Id = p.Id,
+                    Code = p.Code,
+                    Name = p.Name,
+                    Budget = p.Budget,
+                    Remarks = p.Remarks,
+                    Currency = p.Currency,
+                    Members = p.Persons.Select(person => new PersonDTO
+                    {
+                        Id = person.Id,
+                        FirstName = person.FirstName,
+                        LastName = person.LastName,
+                        Username = person.UserName,
+                    }).ToList()
+                })
+                .FirstOrDefaultAsync();
         }
-       
     }
 }

@@ -15,7 +15,7 @@ namespace Projector.Models.Services
             _context = context;
         }
 
-        public async Task<Person> AuthenticateUserAsync(string username, string password)
+        public async Task<Person?> AuthenticateUserAsync(string username, string password)
         {
             var user = await _context.Persons
                 .FirstOrDefaultAsync(u => u.UserName == username);

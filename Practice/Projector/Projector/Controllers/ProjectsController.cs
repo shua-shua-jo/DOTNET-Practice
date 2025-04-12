@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Projector.Models.ViewModels;
 using Projector.Models.InputModels;
+using Projector.Models.OutputModels;
 using Projector.Models.Services;
 
 namespace Projector.Controllers
@@ -18,16 +19,18 @@ namespace Projector.Controllers
             _projectService = projectService;
             _projectAssignmentService = projectAssignmentService;
         }
+
         public async Task<IActionResult> Index()
         {
-            var viewModel = await _projectService.GetProjectsViewModelAsync();
-
-            return View(viewModel); 
+            var projects = await _projectService.GetProjectsAsync();
+            return View(ProjectsViewModel.FromDTO(projects)); 
         }
+
         public IActionResult Create()
         {
             return View(new CreateOrEditProjectInputModel());
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CreateOrEditProjectInputModel model)
@@ -48,27 +51,29 @@ namespace Projector.Controllers
             }
             return RedirectToAction("Details", "Projects", new {id = result.Data.Id});
         }
+
         public async Task<IActionResult> Assignment(int projectId)
         {
-            var viewModel = await _projectAssignmentService.GetAssignmentData(projectId);
-            if (viewModel == null)
+            var (project, notMembers) = await _projectAssignmentService.GetAssignmentDataAsync(projectId);
+            if (project == null || notMembers == null)
             {
                 ModelState.AddModelError(string.Empty, "Error assigning members to project.");
                 return RedirectToAction("Index");
             }
-            return View(viewModel);
+            return View(AssignmentViewModel.FromProject(project, notMembers));
         }
+
         public async Task<IActionResult> Details(int id)
         {
-            var viewModel = await _projectService.GetProjectAndMembersByIdAsync(id);
-            if (viewModel == null)
+            var projectDetails = await _projectService.GetProjectDetailsAsync(id);
+            if (projectDetails == null)
             {
                 ModelState.AddModelError(string.Empty, "Error getting project details.");
                 return View("Index");
             }
-
-            return View(viewModel);
+            return View(ProjectDetailsViewModel.FromDTO(projectDetails));
         }
+
         public async Task<IActionResult> Edit(int id)
         {
             var viewModel = await _projectService.GetProjectByIdAsync(id);
@@ -79,6 +84,7 @@ namespace Projector.Controllers
             }
             return View(viewModel);
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, CreateOrEditProjectInputModel model)
@@ -99,6 +105,7 @@ namespace Projector.Controllers
             }
             return RedirectToAction("Details", "Projects", new { id = result.Data.Id });
         }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Projector.Data;
-using Projector.Models.ViewModels;
 using Projector.Models.OutputModels;
 using Projector.Models.Entities;
 
@@ -13,30 +12,26 @@ namespace Projector.Models.Services
         {
             _context = context;
         }
-        public async Task<AssignmentViewModel> GetAssignmentData(int projectId)
+
+        public async Task<(Project? Project, List<PersonDTO>? NotMembers)> GetAssignmentDataAsync(int projectId)
         {
             var project = await _context.Projects
                 .Include(p => p.Persons)
                 .FirstOrDefaultAsync(p => p.Id == projectId);
+            
             if (project == null)
             {
-                return null;
+                return (null, null);
             }
 
             var allPersons = await _context.Persons.ToListAsync();
-
             var currentMemberIds = project.Persons.Select(m => m.Id).ToList();
 
-            var viewModel = new AssignmentViewModel
-            {
-                ProjectId = project.Id,
-                ProjectName = project.Name,
-                CurrMembers = MapToPersonDTO(project.Persons),
-                NotMembers = MapToPersonDTO(allPersons
-                    .Where(p => !currentMemberIds.Contains(p.Id)))
-            };
-            return viewModel;
+            var notMembers = MapToPersonDTO(allPersons.Where(p => !currentMemberIds.Contains(p.Id)));
+
+            return (project, notMembers);
         }
+
         private List<PersonDTO> MapToPersonDTO(IEnumerable<Person> persons)
         {
             return persons.Select(p => new PersonDTO
@@ -69,6 +64,7 @@ namespace Projector.Models.Services
             }
             return CommandResult.Error("Person added unsuccessfully to the project");
         }
+
         public async Task<CommandResult> RemovePersonToProjectAsync(int projectId, int personId)
         {
             var project = await _context.Projects
@@ -92,6 +88,7 @@ namespace Projector.Models.Services
             }
             return CommandResult.Error("Person removed unsuccessfully to the project");
         }
+
         public async Task<CommandResult.WithData<PersonDTO>> GetPersonDataAsync(int personId)
         {
             var person = await _context.Persons
