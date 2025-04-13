@@ -36,9 +36,11 @@ namespace Projector.Controllers
                         }
                     });
                 }
+                return BadRequest(new { success = false, message = person.Errors[0] });
             }
-            return Json(new { success = false, message = "Error assigning the person to the project." });
+            return BadRequest(new { success = false, message = result.Errors[0] });
         }
+
         [HttpPost("unassign/{personId}")]
         public async Task<IActionResult> RemovePerson(int projectId, int personId)
         {
@@ -60,8 +62,9 @@ namespace Projector.Controllers
                         }
                     });
                 }
+                return BadRequest(new { success = false, message = person.Errors[0] });
             }
-            return Json(new { success = false, message = "Error removing the person to the project." });
+            return BadRequest(new { success = false, message = result.Errors[0] });
         }
     }
 }

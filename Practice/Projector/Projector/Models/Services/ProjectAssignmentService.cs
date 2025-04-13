@@ -45,28 +45,39 @@ namespace Projector.Models.Services
 
         public async Task<CommandResult> AssignPersonToProjectAsync(int projectId, int personId)
         {
+            using var transaction = await _context.Database.BeginTransactionAsync(System.Data.IsolationLevel.RepeatableRead);
+            
             var project = await _context.Projects
                 .Include(p => p.Persons)
                 .FirstOrDefaultAsync(p => p.Id == projectId);
 
+            if (project == null)
+            {
+                return CommandResult.Error("Project not found.");
+            }
+
             var person = await _context.Persons.FindAsync(personId);
-
-            if (project == null || person == null)
+            if (person == null)
             {
-                return CommandResult.Error("Project or Person not found.");
+                return CommandResult.Error("Person not found.");
             }
-            if (!project.Persons.Any(p => p.Id == personId))
-            {
-                project.Persons.Add(person);
-                await _context.SaveChangesAsync();
 
-                return CommandResult.Success();
+            if (project.Persons.Any(p => p.Id == personId))
+            {
+                return CommandResult.Error("Person is already assigned to this project. Try refreshing this page.");
             }
-            return CommandResult.Error("Person added unsuccessfully to the project");
+
+            project.Persons.Add(person);
+            await _context.SaveChangesAsync();
+            await transaction.CommitAsync();
+
+            return CommandResult.Success();
         }
 
         public async Task<CommandResult> RemovePersonToProjectAsync(int projectId, int personId)
         {
+            using var transaction = await _context.Database.BeginTransactionAsync(System.Data.IsolationLevel.RepeatableRead);
+            
             var project = await _context.Projects
                 .Include(p => p.Persons)
                 .FirstOrDefaultAsync(p => p.Id == projectId);
@@ -77,16 +88,16 @@ namespace Projector.Models.Services
             }
 
             var person = project.Persons.FirstOrDefault(p => p.Id == personId);
-
-            
-            if (person != null )
+            if (person == null)
             {
-                project.Persons.Remove(person);
-                await _context.SaveChangesAsync();
-
-                return CommandResult.Success();
+                return CommandResult.Error("Person is not assigned to this project. Try refreshing this page.");
             }
-            return CommandResult.Error("Person removed unsuccessfully to the project");
+
+            project.Persons.Remove(person);
+            await _context.SaveChangesAsync();
+            await transaction.CommitAsync();
+
+            return CommandResult.Success();
         }
 
         public async Task<CommandResult.WithData<PersonDTO>> GetPersonDataAsync(int personId)

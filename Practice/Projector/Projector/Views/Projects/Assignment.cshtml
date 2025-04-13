@@ -1,42 +1,37 @@
-﻿@using Projector.Models.ViewModels
-@model AssignmentViewModel
+﻿@model Projector.Models.ViewModels.AssignmentViewModel
 @{
-	ViewData["Title"] = "Project Assignments";
+    ViewData["Title"] = "Project Assignment";
 }
-<style>
-    .return-link { 
-        width: max-content;
-    }
-</style>
 
-<a asp-action="Index" asp-controller="Projects" class="d-flex gap-1 align-items-center justify-content-center return-link mb-2 btn btn-primary">
-    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left-circle" viewBox="0 0 16 16">
-        <path fill-rule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8m15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0m-4.5-.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5z" />
-    </svg>
-    Return to Projects
-</a>
+<h1>Project Assignment</h1>
+<h4>@Model.ProjectName</h4>
+<hr />
 
-<h3>Project Assignment - @Model.ProjectName</h3>
-<div class="row mb-4">
-    <div class="col-md-8">
-        <div class="input-group">
-            <select id="availablePersonsDropdown" class="form-select">
-                <option class="text-secondary" value="" selected disabled>Select a Person</option>
-	            @foreach (var mem in Model.NotMembers)
-	            {
-		            <option value="@mem.Id">@($"{mem.FirstName} {mem.LastName} ({mem.Username})")</option>
-	            }
+<div class="alert" style="display: none;" id="actionStatusAlert"></div>
+
+<div class="row mb-3">
+    <div class="col-md-6">
+        <div class="form-group">
+            <label for="availablePersonsDropdown">Available Persons</label>
+            <select class="form-select" id="availablePersonsDropdown">
+                <option value="">Select a person...</option>
+                @foreach (var person in Model.NotMembers)
+                {
+                    <option value="@person.Id">@person.LastName, @person.FirstName (@person.Username)</option>
+                }
             </select>
-            <button id="assignButton" class="btn btn-primary" type="button" disabled>Add</button>
         </div>
     </div>
-    <div class="action-status text-info"></div>
+    <div class="col-md-2">
+        <button class="btn btn-primary mt-4" id="assignButton" disabled>
+            Add
+        </button>
+    </div>
 </div>
 
 <div id="currentMembersSection">
     @if (Model.HasCurrMembers)
     {
-        <h3>Current Members</h3>
         <table class="table">
             <thead>
                 <tr>
@@ -79,108 +74,109 @@
                 $('#assignButton').prop('disabled', $(this).val() === '');
             });
 
-            // assgin member
-            document.getElementById('assignButton').addEventListener('click', async function() {
-              const projectId = @Model.ProjectId;
-              const personId = document.getElementById('availablePersonsDropdown').value;
-
-              if (!personId) return;
-
-              const button = this;
-              button.disabled = true;
-              button.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Adding...';
-
-              try {
-                const response = await fetch(`/projects/${projectId}/assignments/assign/${personId}`, {
-                  method: 'POST',
-                  headers: {
-                    'Content-Type': 'application/json',
-                    'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
-                  }
-                });
-
-                if (!response.ok) {
-                  throw new Error(await response.text());
+            function showActionStatus(message, isError = false) {
+                const alert = $('#actionStatusAlert');
+                alert.removeClass('alert-success alert-danger')
+                     .addClass(isError ? 'alert-danger' : 'alert-success')
+                     .text(message)
+                     .show();
+                if (!isError) {
+                    alert.fadeOut(3000);
+                } else {
+                    // If it's an error, keep it visible for a while longer
+                    setTimeout(() => alert.fadeOut(), 10000);
                 }
+            }
+
+            // assign member
+            document.getElementById('assignButton').addEventListener('click', async function() {
+                const projectId = @Model.ProjectId;
+                const personId = document.getElementById('availablePersonsDropdown').value;
+                const personOption = document.querySelector(`#availablePersonsDropdown option[value="${personId}"]`);
+                if (!personId) return;
+
+                const button = this;
+                const originalButtonText = button.innerHTML;
+                button.disabled = true;
+                button.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Adding...';
+
+                const response = await fetch(`/projects/${projectId}/assignments/assign/${personId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+                    }
+                });
 
                 const data = await response.json();
 
                 if (data.success) {
-                  const person = data.person;
-                  addMemberToTable(person);
-                  document.querySelector(`#availablePersonsDropdown option[value="${personId}"]`).remove();
-                  document.getElementById('availablePersonsDropdown').value = '';
-                  document.querySelector('.action-status').textContent = 'Member added successfully';
+                    const person = data.person;
+                    addMemberToTable(person);
+                    personOption.remove();
+                    document.getElementById('availablePersonsDropdown').value = '';
+                    showActionStatus('Member added successfully');
+                } else {
+                    showActionStatus(data.message, true);
                 }
-              } catch (error) {
-                document.querySelector('.action-status').textContent = error.message || 'Error adding member', 'error';
-              } finally {
-                button.innerHTML = 'Add';
-                button.disabled = true;
-              }
+
+                button.innerHTML = originalButtonText;
+                button.disabled = $('#availablePersonsDropdown').val() === '';
             });
 
-            // remove member
             document.addEventListener('click', async function(e) {
-              if (e.target.classList.contains('remove-member')) {
-                const projectId = @Model.ProjectId;
-                const personId = e.target.dataset.personId;
-                console.log(personId);
-                const button = e.target;
+                if (e.target.classList.contains('remove-member')) {
+                    const projectId = @Model.ProjectId;
+                    const personId = e.target.dataset.personId;
+                    const button = e.target;
+                    const memberRow = document.getElementById(`memberRow-${personId}`);
+                    const originalButtonText = button.innerHTML;
 
-                button.disabled = true;
-                button.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Removing...';
+                    button.disabled = true;
+                    button.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Removing...';
 
-                try {
-                  const response = await fetch(`/projects/${projectId}/assignments/unassign/${personId}`, {
-                    method: 'POST',
-                    headers: {
-                      'Content-Type': 'application/json',
-                      'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+                    const response = await fetch(`/projects/${projectId}/assignments/unassign/${personId}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+                        }
+                    });
+
+                    const data = await response.json();
+
+                    if (data.success) {
+                        const person = data.person;
+                        memberRow.remove();
+                        
+                        // Add back to dropdown
+                        const dropdown = document.getElementById('availablePersonsDropdown');
+                        const option = document.createElement('option');
+                        option.value = person.id;
+                        option.text = `${person.lastName}, ${person.firstName} (${person.userName})`;
+                        dropdown.appendChild(option);
+
+                        if (!document.querySelector('#currentMembersSection tbody tr')) {
+                            document.getElementById('currentMembersSection').innerHTML =
+                                '<div class="alert alert-info" id="noMembersMessage">' +
+                                'This project currently has no members.</div>';
+                        }
+
+                        showActionStatus('Member removed successfully');
+                    } else {
+                        showActionStatus(data.message, true);
+                        button.innerHTML = originalButtonText;
+                        button.disabled = false;
                     }
-                  });
-
-                  if (!response.ok) {
-                    throw new Error(await response.text());
-                  }
-
-                  const data = await response.json();
-
-                  if (data.success) {
-                    const person = data.person;
-                    document.getElementById(`memberRow-${personId}`).remove();
-
-                    const dropdown = document.getElementById('availablePersonsDropdown');
-                    const option = document.createElement('option');
-                    option.value = person.id;
-                    option.text = `${person.lastName}, ${person.firstName} (${person.userName})`;
-                    dropdown.appendChild(option);
-
-                    if (!document.querySelector('#currentMembersSection tbody tr')) {
-                      document.getElementById('currentMembersSection').innerHTML =
-                        '<div class="alert alert-info" id="noMembersMessage">' +
-                        'This project currently has no members.</div>';
-                    }
-
-                    document.querySelector('.action-status').textContent = 'Member removed successfully';
-                  }
-                } catch (error) {
-                  document.querySelector('.action-status').textContent = error.message || 'Error removing member', 'error';
-                } finally {
-                  button.innerHTML = 'Remove';
-                  button.disabled = true;
                 }
-              }
             });
 
             function addMemberToTable(person) {
                 let tableBody = $('#currentMembersSection tbody');
 
-                // create table if it doesn't exist
-                if (tableBody.length === 0) {
+                if (!tableBody.length) {
                     $('#noMembersMessage').remove();
                     $('#currentMembersSection').html(`
-                        <h3>Current Members</h3>
                         <table class="table">
                             <thead>
                                 <tr>
@@ -195,21 +191,21 @@
                     tableBody = $('#currentMembersSection tbody');
                 }
 
-                // add new row
-                tableBody.append(`
+                const row = `
                     <tr id="memberRow-${person.id}">
                         <td>${person.lastName}, ${person.firstName}</td>
                         <td>${person.userName}</td>
                         <td>
-                            <button class="btn btn-danger btn-sm remove-member"
-                                    data-person-id="${person.id}">
+                            <button class="btn btn-danger btn-sm remove-member" data-person-id="${person.id}">
                                 Remove
                             </button>
                         </td>
                     </tr>
-                `);
-            }
+                `;
 
+                // Simply append the new row to the table
+                tableBody.append(row);
+            }
         });
     </script>
 }
