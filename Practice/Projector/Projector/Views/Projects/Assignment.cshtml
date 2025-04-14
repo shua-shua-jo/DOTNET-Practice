@@ -3,68 +3,185 @@
     ViewData["Title"] = "Project Assignment";
 }
 
-<h1>Project Assignment</h1>
-<h4>@Model.ProjectName</h4>
-<hr />
+<style>
+    .return-btn {
+        padding: 0.6rem 1.2rem;
+        font-weight: 500;
+    }
+    .card {
+        border: none;
+        border-radius: 12px;
+        background: white;
+    }
 
-<div class="alert" style="display: none;" id="actionStatusAlert"></div>
+    .page-title {
+        color: #344767;
+        font-weight: 600;
+    }
 
-<div class="row mb-3">
-    <div class="col-md-6">
-        <div class="form-group">
-            <label for="availablePersonsDropdown">Available Persons</label>
-            <select class="form-select" id="availablePersonsDropdown">
-                <option value="">Select a person...</option>
-                @foreach (var person in Model.NotMembers)
-                {
-                    <option value="@person.Id">@person.LastName, @person.FirstName (@person.Username)</option>
-                }
-            </select>
-        </div>
-    </div>
-    <div class="col-md-2">
-        <button class="btn btn-primary mt-4" id="assignButton" disabled>
-            Add
-        </button>
-    </div>
+    .form-label {
+        font-weight: 500;
+        color: #344767;
+        margin-bottom: 0.5rem;
+    }
+
+    .input-group-text {
+        border: 1px solid #dee2e6;
+        border-right: none;
+        color: #6c757d;
+    }
+
+    .form-control, .form-select {
+        border: 1px solid #dee2e6;
+        padding: 0.6rem 1rem;
+    }
+
+    .form-select {
+        border-left: none;
+    }
+
+    .form-control:focus, .form-select:focus {
+        border-color: #0d6efd;
+        box-shadow: 0 0 0 0.25rem rgba(13,110,253,.1);
+    }
+
+    .avatar-circle {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        font-size: 0.875rem;
+    }
+
+    #actionStatusAlert {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 1050;
+        min-width: 300px;
+        box-shadow: 0 0.5rem 1rem rgba(0,0,0,.15);
+    }
+
+    .alert {
+        border: none;
+        border-radius: 8px;
+    }
+</style>
+
+<div class="d-flex align-items-center gap-3 mb-4">
+    <a asp-action="Index" asp-controller="Projects" class="btn btn-outline-primary btn-sm return-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left me-2" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8" />
+        </svg>
+        Projects
+    </a>
+    <h1 class="page-title m-0">Manage Team</h1>
 </div>
 
-<div id="currentMembersSection">
-    @if (Model.HasCurrMembers)
-    {
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Username</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var mem in Model.CurrMembers)
-                {
-                    <tr id="memberRow-@mem.Id">
-                        <td>@mem.LastName, @mem.FirstName</td>
-                        <td>@mem.Username</td>
-                        <td>
-                            <button class="btn btn-danger btn-sm remove-member"
-                                    data-person-id="@mem.Id">
-                                Remove
-                            </button>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    }
-    else
-    {
-        <div class="alert alert-info" id="noMembersMessage">
-            This project currently has no members.
+<div class="container-fluid px-0">
+    <div class="row g-4">
+        <div class="col-lg-4">
+            <div class="card shadow-sm">
+                <div class="card-body p-4">
+                    <h4 class="mb-4">Add Member</h4>
+                    <div class="form-group">
+                        <label for="availablePersonsDropdown" class="form-label">Select Person</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-plus" viewBox="0 0 16 16">
+                                    <path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H1s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C9.516 10.68 8.289 10 6 10s-3.516.68-4.168 1.332c-.678.678-.83 1.418-.832 1.664z" />
+                                    <path fill-rule="evenodd" d="M13.5 5a.5.5 0 0 1 .5.5V7h1.5a.5.5 0 0 1 0 1H14v1.5a.5.5 0 0 1-1 0V8h-1.5a.5.5 0 0 1 0-1H13V5.5a.5.5 0 0 1 .5-.5" />
+                                </svg>
+                            </span>
+                            <select class="form-select" id="availablePersonsDropdown">
+                                <option value="">Choose a person...</option>
+                                @foreach (var person in Model.NotMembers)
+                                {
+                                    <option value="@person.Id">@person.LastName, @person.FirstName (@person.Username)</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary w-100 mt-3" id="assignButton" disabled>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg me-2" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2" />
+                        </svg>
+                        Add to Project
+                    </button>
+                </div>
+            </div>
         </div>
-    }
+        <div class="col-lg-8">
+            <div class="card shadow-sm">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h4 class="mb-0">@Model.ProjectName - Team Members</h4>
+                        <div class="alert alert-success fade show d-none" role="alert" id="actionStatusAlert"></div>
+                    </div>
+                    <div id="currentMembersSection">
+                        @if (Model.HasCurrMembers)
+                        {
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Username</th>
+                                            <th class="text-end">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var mem in Model.CurrMembers)
+                                        {
+                                            <tr id="memberRow-@mem.Id">
+                                                <td>
+                                                    <div class="d-flex align-items-center">
+                                                        <div class="avatar-circle me-3 bg-primary bg-opacity-10 text-primary">
+                                                            @(mem.FirstName?.Length > 0 ? mem.FirstName[0].ToString().ToUpper() : "")@(mem.LastName?.Length > 0 ? mem.LastName[0].ToString().ToUpper() : "")
+                                                        </div>
+                                                        <div>
+                                                            <span class="fw-medium">@mem.LastName, @mem.FirstName</span>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <span class="text-muted">@mem.Username</span>
+                                                </td>
+                                                <td class="text-end">
+                                                    <button class="btn btn-outline-danger btn-sm remove-member"
+                                                            data-person-id="@mem.Id">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-dash me-2" viewBox="0 0 16 16">
+                                                            <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7M11 12h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1 0-1m0-7a3 3 0 1 1-6 0 3 3 0 0 1 6 0M8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4" />
+                                                            <path d="M8.256 14a4.5 4.5 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10q.39 0 .74.025c.226-.341.496-.65.804-.918Q8.844 9.002 8 9c-5 0-6 3-6 4s1 1 1 1z" />
+                                                        </svg>
+                                                        Remove
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="alert alert-info" id="noMembersMessage">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle me-2" viewBox="0 0 16 16">
+                                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
+                                    <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0" />
+                                </svg>
+                                This project currently has no members
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-<div asp-validation-summary="All" class="text-danger"></div>
 
 @section Scripts {
     <script>
@@ -76,15 +193,13 @@
 
             function showActionStatus(message, isError = false) {
                 const alert = $('#actionStatusAlert');
-                alert.removeClass('alert-success alert-danger')
+                alert.removeClass('d-none alert-success alert-danger')
                      .addClass(isError ? 'alert-danger' : 'alert-success')
                      .text(message)
                      .show();
+                
                 if (!isError) {
-                    alert.fadeOut(3000);
-                } else {
-                    // If it's an error, keep it visible for a while longer
-                    setTimeout(() => alert.fadeOut(), 10000);
+                    setTimeout(() => alert.addClass('d-none'), 3000);
                 }
             }
 
@@ -124,86 +239,108 @@
                 button.disabled = $('#availablePersonsDropdown').val() === '';
             });
 
+            // remove member
             document.addEventListener('click', async function(e) {
-                if (e.target.classList.contains('remove-member')) {
-                    const projectId = @Model.ProjectId;
-                    const personId = e.target.dataset.personId;
-                    const button = e.target;
-                    const memberRow = document.getElementById(`memberRow-${personId}`);
-                    const originalButtonText = button.innerHTML;
+                if (!e.target.classList.contains('remove-member')) return;
+                
+                const projectId = @Model.ProjectId;
+                const personId = e.target.dataset.personId;
+                const button = e.target;
+                const memberRow = document.getElementById(`memberRow-${personId}`);
+                const originalButtonText = button.innerHTML;
 
-                    button.disabled = true;
-                    button.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Removing...';
+                button.disabled = true;
+                button.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Removing...';
 
-                    const response = await fetch(`/projects/${projectId}/assignments/unassign/${personId}`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
-                        }
-                    });
-
-                    const data = await response.json();
-
-                    if (data.success) {
-                        const person = data.person;
-                        memberRow.remove();
-                        
-                        // Add back to dropdown
-                        const dropdown = document.getElementById('availablePersonsDropdown');
-                        const option = document.createElement('option');
-                        option.value = person.id;
-                        option.text = `${person.lastName}, ${person.firstName} (${person.userName})`;
-                        dropdown.appendChild(option);
-
-                        if (!document.querySelector('#currentMembersSection tbody tr')) {
-                            document.getElementById('currentMembersSection').innerHTML =
-                                '<div class="alert alert-info" id="noMembersMessage">' +
-                                'This project currently has no members.</div>';
-                        }
-
-                        showActionStatus('Member removed successfully');
-                    } else {
-                        showActionStatus(data.message, true);
-                        button.innerHTML = originalButtonText;
-                        button.disabled = false;
+                const response = await fetch(`/projects/${projectId}/assignments/unassign/${personId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
                     }
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    const person = data.person;
+                    memberRow.remove();
+                    
+                    // Add back to dropdown
+                    const dropdown = document.getElementById('availablePersonsDropdown');
+                    const option = document.createElement('option');
+                    option.value = person.id;
+                    option.text = `${person.lastName}, ${person.firstName} (${person.userName})`;
+                    dropdown.appendChild(option);
+
+                    if (!document.querySelector('#currentMembersSection tbody tr')) {
+                        document.getElementById('currentMembersSection').innerHTML =
+                            '<div class="alert alert-info" id="noMembersMessage">' +
+                            `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle me-2" viewBox="0 0 16 16">
+                                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                                <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0"/>
+                            </svg>` +
+                            'This project currently has no members</div>';
+                    }
+
+                    showActionStatus('Member removed successfully');
+                } else {
+                    showActionStatus(data.message, true);
+                    button.innerHTML = originalButtonText;
+                    button.disabled = false;
                 }
             });
 
             function addMemberToTable(person) {
                 let tableBody = $('#currentMembersSection tbody');
+                const noMembersMessage = $('#noMembersMessage');
 
-                if (!tableBody.length) {
-                    $('#noMembersMessage').remove();
+                if (noMembersMessage.length) {
+                    noMembersMessage.remove();
                     $('#currentMembersSection').html(`
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Username</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle mb-0">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Username</th>
+                                        <th class="text-end">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
                     `);
                     tableBody = $('#currentMembersSection tbody');
                 }
 
                 const row = `
                     <tr id="memberRow-${person.id}">
-                        <td>${person.lastName}, ${person.firstName}</td>
-                        <td>${person.userName}</td>
                         <td>
-                            <button class="btn btn-danger btn-sm remove-member" data-person-id="${person.id}">
+                            <div class="d-flex align-items-center">
+                                <div class="avatar-circle me-3 bg-primary bg-opacity-10 text-primary">
+                                    ${person.firstName[0].toUpperCase()}${person.lastName[0].toUpperCase()}
+                                </div>
+                                <div>
+                                    <span class="fw-medium">${person.lastName}, ${person.firstName}</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="text-muted">${person.userName}</span>
+                        </td>
+                        <td class="text-end">
+                            <button class="btn btn-outline-danger btn-sm remove-member" data-person-id="${person.id}">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-dash me-2" viewBox="0 0 16 16">
+                                    <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7M11 12h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1 0-1m0-7a3 3 0 1 1-6 0 3 3 0 0 1 6 0M8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4" />
+                                    <path d="M8.256 14a4.5 4.5 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10q.39 0 .74.025c.226-.341.496-.65.804-.918Q8.844 9.002 8 9c-5 0-6 3-6 4s1 1 1 1z" />
+                                </svg>
                                 Remove
                             </button>
                         </td>
                     </tr>
                 `;
 
-                // Simply append the new row to the table
                 tableBody.append(row);
             }
         });

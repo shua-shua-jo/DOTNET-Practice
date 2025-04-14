@@ -24,6 +24,7 @@ namespace Projector.Models.Services
             {
                 Id = p.Id,
                 Name = p.Name,
+                Code = p.Code,
                 Budget = p.Budget,
                 Currency = p.Currency,
             }).ToListAsync();

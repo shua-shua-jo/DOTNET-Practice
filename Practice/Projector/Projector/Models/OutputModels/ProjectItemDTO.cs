@@ -6,6 +6,7 @@ namespace Projector.Models.OutputModels
     {
         public int Id { get; set; }
         public string? Name { get; set; }
+        public string? Code { get; set; }
 
         public decimal Budget { get; set; }
         public string? Currency { get; set; }

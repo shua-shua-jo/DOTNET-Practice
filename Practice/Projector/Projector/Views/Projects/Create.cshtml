@@ -5,74 +5,178 @@
 }
 
 <style>
-    .return-link {
-    width: max-content;
+    button {
+        padding: 8px 30px;
     }
 
-    .login-container {
-    box-shadow: 0rem .25rem .75rem rgba(13, 110, 253, .15);
-    padding: 1.5em;
-    border-radius: 5px;
-    justify-self: center;
+    .card {
+        border: none;
+        border-radius: 12px;
+        background: white;
+    }
+
+    .form-label {
+        font-weight: 500;
+        color: #344767;
+        margin-bottom: 0.5rem;
+    }
+
+    .input-group-text {
+        border: 1px solid #dee2e6;
+        border-right: none;
+        color: #6c757d;
+    }
+
+    .form-control, .form-select {
+        border: 1px solid #dee2e6;
+        padding: 0.6rem 1rem;
+    }
+
+    .form-control:focus, .form-select:focus {
+        border-color: #0d6efd;
+        box-shadow: 0 0 0 0.25rem rgba(13,110,253,.1);
+    }
+
+    .input-group > .form-control:focus, .input-group > .form-select:focus {
+        border-left: none;
+    }
+
+    .input-group > .form-control, .input-group > .form-select {
+        border-left: none;
+    }
+
+    .btn {
+        padding: 0.6rem 1.2rem;
+        font-weight: 500;
+    }
+
+    .page-title {
+        color: #344767;
+        font-weight: 600;
     }
 </style>
 
-<div class="w-50 login-container">
+<div class="container-fluid px-0">
+    <div class="row justify-content-center">
+        <div class="d-flex align-items-center gap-3 mb-4 col-lg-8">
+            <h1 class="page-title m-0">Create New Project</h1>
+        </div>
+        <div class="col-lg-8">
+            <div class="card shadow-sm">
+                <div class="card-body p-4">
+                    <form asp-action="Create" method="post" class="d-flex flex-column gap-4">
+                        @Html.AntiForgeryToken()
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label asp-for="Code" class="form-label">Project Code<span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-hash" viewBox="0 0 16 16">
+                                            <path d="M8.39 12.648a1 1 0 0 0-.015.18c0 .305.21.508.5.508.266 0 .492-.172.555-.477l.554-2.703h1.204c.421 0 .617-.234.617-.547 0-.312-.188-.53-.617-.53h-.985l.516-2.524h1.265c.43 0 .618-.227.618-.547 0-.313-.188-.524-.618-.524h-1.046l.476-2.304a1 1 0 0 0 .016-.164.51.51 0 0 0-.516-.516.54.54 0 0 0-.539.43l-.523 2.554H7.617l.477-2.304c.008-.04.015-.118.015-.164a.51.51 0 0 0-.523-.516.54.54 0 0 0-.531.43L6.53 5.484H5.414c-.43 0-.617.22-.617.532s.187.539.617.539h.906l-.515 2.523H4.609c-.421 0-.609.219-.609.531s.188.547.61.547h.976l-.516 2.492c-.008.04-.015.125-.015.18 0 .305.21.508.5.508.265 0 .492-.172.554-.477l.555-2.703h2.242zm-1-6.109h2.266l-.515 2.563H6.859l.532-2.563z" />
+                                        </svg>
+                                    </span>
+                                    <input asp-for="Code" 
+                                           type="text" 
+                                           maxlength="50" 
+                                           class="form-control" 
+                                           placeholder="Enter project code" 
+                                           required 
+                                           autocomplete="off"/>
+                                </div>
+                                <span asp-validation-for="Code" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="Name" class="form-label">Project Name<span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-folder" viewBox="0 0 16 16">
+                                            <path d="M.54 3.87.5 3a2 2 0 0 1 2-2h3.672a2 2 0 0 1 1.414.586l.828.828A2 2 0 0 0 9.828 3h3.982a2 2 0 0 1 1.992 2.181l-.637 7A2 2 0 0 1 13.174 14H2.826a2 2 0 0 1-1.991-1.819l-.637-7a2 2 0 0 1 .342-1.31zM2.19 4a1 1 0 0 0-.996 1.09l.637 7a1 1 0 0 0 .995.91h10.348a1 1 0 0 0 .995-.91l.637-7A1 1 0 0 0 13.81 4zm4.69-1.707A1 1 0 0 0 6.172 2H2.5a1 1 0 0 0-1 .981l.006.139q.323-.119.684-.12h5.396z" />
+                                        </svg>
+                                    </span>
+                                    <input asp-for="Name" 
+                                           type="text" 
+                                           maxlength="50" 
+                                           class="form-control" 
+                                           placeholder="Enter project name" 
+                                           required 
+                                           autocomplete="off" />
+                                </div>
+                                <span asp-validation-for="Name" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-4">
+                                <label asp-for="SelectedCurrency" class="form-label">Currency<span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-exchange" viewBox="0 0 16 16">
+                                            <path d="M0 5a5 5 0 0 0 4.027 4.905 6.5 6.5 0 0 1 .544-2.073C3.695 7.536 3.132 6.864 3 5.91h-.5v-.426h.466V5.05q-.001-.07.004-.135H2.5v-.427h.511C3.236 3.24 4.213 2.5 5.681 2.5c.316 0 .59.031.819.085v.733a3.5 3.5 0 0 0-.815-.082c-.919 0-1.538.466-1.734 1.252h1.917v.427h-1.98q-.004.07-.003.147v.422h1.983v.427H3.93c.118.602.468 1.03 1.005 1.229a6.5 6.5 0 0 1 4.97-3.113A5.002 5.002 0 0 0 0 5m16 5.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0m-7.75 1.322c.069.835.746 1.485 1.964 1.562V14h.54v-.62c1.259-.086 1.996-.74 1.996-1.69 0-.865-.563-1.31-1.57-1.54l-.426-.1V8.374c.54.06.884.347.966.745h.948c-.07-.804-.779-1.433-1.914-1.502V7h-.54v.629c-1.076.103-1.808.732-1.808 1.622 0 .787.544 1.288 1.45 1.493l.358.085v1.78c-.554-.08-.92-.376-1.003-.787zm1.96-1.895c-.532-.12-.82-.364-.82-.732 0-.41.311-.719.824-.809v1.54h-.005zm.622 1.044c.645.145.943.38.943.796 0 .474-.37.8-1.02.86v-1.674z" />
+                                        </svg>
+                                    </span>
+                                    <select asp-for="SelectedCurrency" 
+                                            asp-items="Model.CurrencyOptions" 
+                                            class="form-select">
+                                        <option value="" class="text-secondary" selected disabled>Select Currency</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <label asp-for="Budget" class="form-label">Budget<span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-wallet2" viewBox="0 0 16 16">
+                                            <path d="M12.136.326A1.5 1.5 0 0 1 14 1.78V3h.5A1.5 1.5 0 0 1 16 4.5v9a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 13.5v-9a1.5 1.5 0 0 1 1.432-1.499zM5.562 3H13V1.78a.5.5 0 0 0-.621-.484zM1.5 4a.5.5 0 0 0-.5.5v9a.5.5 0 0 0 .5.5h13a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5z" />
+                                        </svg>
+                                    </span>
+                                    <input asp-for="Budget" 
+                                           type="numeric" 
+                                           inputmode="decimal" 
+                                           min="1" 
+                                           max="99999999999999.9999" 
+                                           class="form-control"
+                                           placeholder="Enter budget amount"
+                                           required
+                                           autocomplete="off" 
+                                           oninput="validateBudget(this)" />
+                                </div>
+                                <span asp-validation-for="Budget" class="text-danger small"></span>
+                            </div>
+                            <div class="col-12">
+                                <label asp-for="Remarks" class="form-label">Remarks</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
+                                            <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325" />
+                                        </svg>
+                                    </span>
+                                    <textarea asp-for="Remarks" 
+                                              class="form-control" 
+                                              rows="3"
+                                              placeholder="Enter additional notes or remarks (optional)"
+                                              autocomplete="off"></textarea>
+                                </div>
+                                <span asp-validation-for="Remarks" class="text-danger small"></span>
+                            </div>
+                        </div>
 
-    <a asp-action="Index" asp-controller="Projects" class="d-flex gap-1 align-items-center justify-content-center return-link mb-2 btn btn-primary">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left-circle" viewBox="0 0 16 16">
-            <path fill-rule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8m15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0m-4.5-.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5z" />
-        </svg>
-        Return to Projects
-    </a>
-
-    <h2>Create a New Project</h2>
-
-    <form asp-action="Create" method="post" class="d-flex flex-column gap-3">
-        @Html.AntiForgeryToken()
-        <div class="row">
-            <div class="form-group col-md-6">
-                <label asp-for="Code" class="control-label">Code<span class="text-danger">*</span></label>
-                <input asp-for="Code" type="text" maxlength="50" class="form-control" placeholder="Enter code" required autocomplete="off"/>
-                <span asp-validation-for="Code" class="text-danger"></span>
-            </div>
-            <div class="form-group col-md-6">
-                <label asp-for="Name" class="control-label">Name<span class="text-danger">*</span></label>
-                <input asp-for="Name" type="text" maxlength="50" class="form-control" placeholder="Enter project name" required autocomplete="off" />
-                <span asp-validation-for="Name" class="text-danger"></span>
+                        <div class="d-flex justify-content-end gap-2 mt-2">
+                            <a asp-action="Index" class="btn btn-light">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg me-2" viewBox="0 0 16 16">
+                                    <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z" />
+                                </svg>
+                                Cancel
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-lg me-2" viewBox="0 0 16 16">
+                                    <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425z" />
+                                </svg>
+                                Create Project
+                            </button>
+                        </div>
+                    </form>
+                    <div asp-validation-summary="All" class="text-danger mt-3"></div>
+                </div>
             </div>
         </div>
-        <div class="row">
-            <div class="form-group col-md-4">
-                <label asp-for="SelectedCurrency">Currency<span class="text-danger">*</span></label>
-                <select asp-for="SelectedCurrency" asp-items="Model.CurrencyOptions" class="form-control">
-                    <option value="" class="text-secondary" selected disabled>Select Currency</option>
-                </select>
-            </div>
-            <div class="form-group col-md-8">
-                <label asp-for="Budget" class="control-label">Budget<span class="text-danger">*</span></label>
-                <input asp-for="Budget" 
-                    type="numeric" 
-                    inputmode="decimal" 
-                    min="1" 
-                    max="99999999999999.9999" 
-                    class="form-control custom-number-input"
-                    placeholder="Enter budget"
-                    required
-                    autocomplete="off" 
-                    oninput="validateBudget(this)" />
-                <span asp-validation-for="Budget" class="text-danger"></span>
-            </div>
-        </div>
-        <div class="form-group">
-            <label asp-for="Remarks" class="control-label">Remarks</label>
-            <textarea asp-for="Remarks" class="form-control" placeholder=@($"Enter remarks (leave blank if None)") autocomplete="off"></textarea>
-            <span asp-validation-for="Remarks" class="text-danger"></span>
-        </div>
-
-        <button type="submit" class="btn btn-primary mt-3">Save</button>
-    </form>
-    <div asp-validation-summary="All" class="text-danger"></div>
+    </div>
 </div>
 
 <script>

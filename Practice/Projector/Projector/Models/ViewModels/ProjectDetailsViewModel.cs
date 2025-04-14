@@ -6,6 +6,7 @@ namespace Projector.Models.ViewModels
 {
     public class ProjectDetailsViewModel
     {
+        public int Id { get; set; }
         public string Code { get; set; }
         public string Name { get; set; }
         public string Remarks { get; set; }
@@ -17,6 +18,7 @@ namespace Projector.Models.ViewModels
 
         private ProjectDetailsViewModel(ProjectDetailsDTO dto)
         {
+            Id = dto.Id;
             Code = dto.Code!;
             Name = dto.Name!;
             Budget = dto.Budget;

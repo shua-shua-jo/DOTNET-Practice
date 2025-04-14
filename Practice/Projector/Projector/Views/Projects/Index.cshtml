@@ -1,45 +1,175 @@
 ﻿@using Projector.Models.ViewModels
 @model ProjectsViewModel
 @{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Projects";
 }
-<h1 class="mb-4">The Projector</h1>
-<div class="container">
-    <div class="row">
-        <div class="col-8 projects-table">
-            <table class="table table-hover align-middle">
-                <thead>
-                    <tr class="table-dark">
-                        <td>Project Name</td>
-                        <td>Budget</td>
-                        <td>Tasks</td>
-                    </tr>
-                </thead>
-                <tbody class="table-group-divider">
-                    @foreach (var project in Model.Projects)
-                    {
-                        <tr>
-                            <td>@project.Name</td>
-                            <td>@project.FormattedBudget</td>
-                            <td>
-                                <div class="d-flex justify-content-around gap-2">
-                                    <a asp-action="Assignment" asp-route-projectId="@project.Id" class="btn btn-outline-primary">Assignment</a>
-                                    <a asp-action="Details" class="btn btn-outline-info" asp-route-id="@project.Id">Details</a>
-                                    <a asp-action="Edit" class="btn btn-outline-warning" asp-route-id="@project.Id">Edit</a>
-                                </div>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
+<style>
+    .projects-container {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+        padding: 1.5rem;
+    }
+
+    .projects-table {
+        height: calc(100vh - 280px);
+        min-height: 400px;
+        overflow-y: auto;
+        border-radius: 8px;
+        background: white;
+    }
+
+    .table {
+        margin-bottom: 0;
+    }
+
+    .table > :not(caption) > * > * {
+        padding: 1rem 1.5rem;
+    }
+
+    thead {
+        position: sticky;
+        top: 0;
+        z-index: 1;
+        background: #f8f9fa;
+    }
+
+    thead tr {
+        border-bottom: 2px solid #dee2e6;
+    }
+
+    .table-hover tbody tr:hover {
+        background-color: #f8f9fa;
+        transition: background-color 0.2s ease;
+    }
+
+    .btn {
+        padding: 0.5rem 1rem;
+        font-weight: 500;
+        transition: all 0.2s ease;
+    }
+
+    .btn:hover {
+        transform: translateY(-1px);
+    }
+
+    .btn-outline-primary {
+        border-width: 2px;
+    }
+
+    .btn-outline-warning {
+        border-width: 2px;
+    }
+
+    .btn-outline-info {
+        border-width: 2px;
+    }
+
+    .tasks-card {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+        padding: 1.5rem;
+    }
+
+    .tasks-card h4 {
+        color: #2d3748;
+        margin-bottom: 1rem;
+    }
+
+    .page-title {
+        color: #2d3748;
+        font-weight: 600;
+        margin-bottom: 1.5rem;
+    }
+    .fs-custom {
+        font-size: 10pt;
+    }
+</style>
+
+<h1 class="page-title">Projects Overview</h1>
+
+<div class="container-fluid px-0">
+    <div class="row g-4">
+        <div class="col-lg-9">
+            <div class="projects-container">
+                <div class="projects-table">
+                    <table class="table table-hover align-middle">
+                        <thead>
+                            <tr>
+                                <th>Project Name</th>
+                                <th>Budget</th>
+                                <th class="text-end">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var project in Model.Projects)
+                            {
+                                <tr>
+                                    <td>
+                                        <div class="d-flex flex-column">
+                                            <span class="fw-medium">@project.Name</span>
+                                            <small class="text-muted">@project.Code</small>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-success bg-opacity-10 text-success px-3 py-2 fs-custom">
+                                            @project.FormattedBudget
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex justify-content-end gap-2">
+                                            <a asp-action="Assignment" asp-route-projectId="@project.Id" 
+                                               class="btn btn-outline-primary btn-sm">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-people-fill" viewBox="0 0 16 16">
+                                                    <path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6m-5.784 6A2.24 2.24 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.3 6.3 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1zM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5"/>
+                                                </svg>
+                                                Assign
+                                            </a>
+                                            <a asp-action="Details" asp-route-id="@project.Id" 
+                                               class="btn btn-outline-info btn-sm">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle-fill" viewBox="0 0 16 16">
+                                                    <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2"/>
+                                                </svg>
+                                                Details
+                                            </a>
+                                            <a asp-action="Edit" asp-route-id="@project.Id" 
+                                               class="btn btn-outline-warning btn-sm">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-fill" viewBox="0 0 16 16">
+                                                    <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.5.5 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11z"/>
+                                                </svg>
+                                                Edit
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
-        <div class="col">
-            <h4>Other Tasks</h4>
-            <div class="d-flex flex-column gap-2">
-                <a asp-action="Create" asp-controller="Projects" class="btn btn-outline-primary">Create Project...</a>
-                <a asp-action="Create" asp-controller="Persons" class="btn btn-outline-primary">Create Person...</a>
+        <div class="col-lg-3">
+            <div class="tasks-card">
+                <h4>Quick Actions</h4>
+                <div class="d-flex flex-column gap-3">
+                    <a asp-action="Create" asp-controller="Projects" class="btn btn-primary">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle-fill" viewBox="0 0 16 16">
+                            <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3z"/>
+                        </svg>
+                        New Project
+                    </a>
+                    <a asp-action="Create" asp-controller="Persons" class="btn btn-outline-primary">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-plus-fill" viewBox="0 0 16 16">
+                            <path d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
+                            <path fill-rule="evenodd" d="M13.5 5a.5.5 0 0 1 .5.5V7h1.5a.5.5 0 0 1 0 1H14v1.5a.5.5 0 0 1-1 0V8h-1.5a.5.5 0 0 1 0-1H13V5.5a.5.5 0 0 1 .5-.5"/>
+                        </svg>
+                        New Person
+                    </a>
+                </div>
             </div>
         </div>
     </div>
 </div>
-<div asp-validation-summary="All" class="text-danger"></div>
+
+<div asp-validation-summary="All" class="text-danger mt-3"></div>

@@ -41,7 +41,7 @@ namespace Projector.Controllers
                 
                 return View(model);
             }
-            return RedirectToAction("Index", "Projects");
+            return RedirectToAction("Index", "Persons");
         }
     }
 }
