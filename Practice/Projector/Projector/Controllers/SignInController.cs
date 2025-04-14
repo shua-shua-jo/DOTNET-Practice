@@ -1,5 +1,7 @@
 ﻿using System.Diagnostics;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Projector.Models.ViewModels;
 using Projector.Models.InputModels;
@@ -38,7 +40,7 @@ namespace Projector.Controllers
                 ModelState.AddModelError("InvSign", "Invalid login attempt.");
                 return View(model);
             }
-            var principal = _signInService.CreateClaimsPrincipalAsync(user.FirstName);
+            var principal = _signInService.CreateClaimsPrincipalAsync(user.FirstName, user.UserName);
             var authProperties = _signInService.CreateAuthProperties();
 
             await _signInService.SignInAsync(HttpContext, principal, authProperties);
@@ -51,6 +53,33 @@ namespace Projector.Controllers
         {
             await HttpContext.SignOutAsync("CookieAuth");
             return RedirectToAction("Index", "SignIn");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize]
+        public async Task<IActionResult> DeactivateAccount()
+        {
+            var username = User.FindFirstValue(ClaimTypes.Email);
+            if (string.IsNullOrEmpty(username))
+            {
+                return BadRequest(new { success = false, message = "Not found." });
+            }
+
+            var result = await _signInService.DeactivateAccountAsync(username);
+            if (result.IsSuccessful)
+            {
+                await HttpContext.SignOutAsync("CookieAuth");
+                return Ok(new { success = true });
+            }
+
+            return BadRequest(new { success = false, message = result.Errors[0] });
+        }
+
+        [Authorize]
+        public IActionResult Account()
+        {
+            return View();
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

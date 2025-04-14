@@ -21,8 +21,8 @@ namespace Projector.Models.Services
                 .Where(u => u.UserName == username)
                 .FirstOrDefaultAsync();
 
-            // Return null if user not found or password doesn't match
-            if (user == null || user.Password != password)
+            // Return null if user not found, password doesn't match, or account is deactivated
+            if (user == null || user.Password != password || !user.IsActive)
             {
                 return null;
             }
@@ -30,11 +30,12 @@ namespace Projector.Models.Services
             return user;
         }
 
-        public ClaimsPrincipal CreateClaimsPrincipalAsync(string firstName)
+        public ClaimsPrincipal CreateClaimsPrincipalAsync(string firstName, string email)
         {
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Name, firstName)
+                new Claim(ClaimTypes.Name, firstName),
+                new Claim(ClaimTypes.Email, email)
             };
 
             return new ClaimsPrincipal(new ClaimsIdentity(claims, "CookieAuth"));
@@ -53,5 +54,19 @@ namespace Projector.Models.Services
             await httpContext.SignInAsync("CookieAuth", principal, properties);
         }
 
+        public async Task<CommandResult> DeactivateAccountAsync(string username)
+        {
+            var user = await _context.Persons
+                .FirstOrDefaultAsync(u => u.UserName == username);
+
+            if (user == null)
+            {
+                return CommandResult.Error("Error: User not found.");
+            }
+
+            user.IsActive = false;
+            await _context.SaveChangesAsync();
+            return CommandResult.Success();
+        }
     }
 }
