@@ -24,7 +24,9 @@ namespace Projector.Models.Services
                 return (null, null);
             }
 
-            var allPersons = await _context.Persons.ToListAsync();
+            var allPersons = await _context.Persons
+                .Where(p => p.IsActive)  // Only get active persons
+                .ToListAsync();
             var currentMemberIds = project.Persons.Select(m => m.Id).ToList();
 
             var notMembers = MapToPersonDTO(allPersons.Where(p => !currentMemberIds.Contains(p.Id)));

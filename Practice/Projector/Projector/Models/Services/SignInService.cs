@@ -56,7 +56,10 @@ namespace Projector.Models.Services
 
         public async Task<CommandResult> DeactivateAccountAsync(string username)
         {
+            using var transaction = await _context.Database.BeginTransactionAsync(System.Data.IsolationLevel.RepeatableRead);
+
             var user = await _context.Persons
+                .Include(p => p.Projects)
                 .FirstOrDefaultAsync(u => u.UserName == username);
 
             if (user == null)
@@ -64,8 +67,13 @@ namespace Projector.Models.Services
                 return CommandResult.Error("Error: User not found.");
             }
 
+            user.Projects.Clear();
+
             user.IsActive = false;
+            
             await _context.SaveChangesAsync();
+            await transaction.CommitAsync();
+            
             return CommandResult.Success();
         }
     }
