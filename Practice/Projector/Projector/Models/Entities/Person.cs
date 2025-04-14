@@ -20,6 +20,8 @@ namespace Projector.Models.Entities
         [DataType(DataType.Password)]
         public required string Password { get; set; }
         
+        public bool IsActive { get; set; } = true;
+        
         public List<Project> Projects { get; } = [];
     }
 }
